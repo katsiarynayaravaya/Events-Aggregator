@@ -55,6 +55,33 @@
                 </nav>
             </div>
         </div>
+
+        <main class="main-content container">
+            <!-- Левая часть под коллаж -->
+            <section class="events-section">
+                <div class="placeholder">
+                    <p>Тут будет коллаж с мероприятиями</p>
+                </div>
+            </section>
+
+            <aside class="calendar-section">
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <button id="prevMonth" aria-label="Предыдущий месяц">&#10094;</button>
+                        <h2 id="monthYear"></h2>
+                        <button id="nextMonth" aria-label="Следующий месяц">&#10095;</button>
+                    </div>
+                    <div class="calendar-body">
+                        <div class="day-names">
+                            <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+                        </div>
+                        <div id="calendarDays" class="calendar-days"></div>
+                    </div>
+                </div>
+            </aside>
+        </main>
     </div>
+    
+    <script src="/js/calendar.js"></script>
 </body>
 </html>
