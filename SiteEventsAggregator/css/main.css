@@ -74,6 +74,8 @@ img {
 }
 
 .search-box input {
+    width: clamp(250px, 40vw, 500px);
+
     background-color: #003D3A;
     border: 2px solid #F0EDE5;
     border-radius: 0;
@@ -81,8 +83,12 @@ img {
     font-size: 1rem;
     color: #004643;
     outline: none;
-    width: 500px;
     transition: all 0.25s ease;
+}
+
+.right-block {
+    flex-wrap: wrap;
+    gap: 16px;
 }
 
 .search-box input::placeholder {
@@ -183,4 +189,92 @@ img {
 .sub-bar .categories ul li a:focus-visible {
     outline: 2px dashed rgba(42,26,31,0.18);
     outline-offset: 4px;
+}
+
+/* --- Адаптивность --- */
+@media (max-width: 992px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .right-block {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .search-box {
+        flex: 1;
+        width: 100%;
+    }
+
+    .search-box input {
+        width: 100%;
+        max-width: none;
+    }
+
+    .auth-links {
+        font-size: 0.9rem;
+    }
+}
+
+/* Планшеты и телефоны */
+@media (max-width: 768px) {
+    .logo img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .site-title {
+        font-size: 1.1rem;
+    }
+
+    .search-box input {
+        padding: 8px 36px 8px 12px;
+        font-size: 0.95rem;
+    }
+
+    .sub-bar .categories ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .sub-bar .categories ul li a {
+        font-size: 0.9rem;
+    }
+}
+
+/* Мобильные экраны */
+@media (max-width: 480px) {
+    .logo-block {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .right-block {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .search-box input {
+        width: 100%;
+        font-size: 0.9rem;
+    }
+
+    .auth-links {
+        justify-content: center;
+    }
+
+    .sub-bar .categories ul {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
 }
