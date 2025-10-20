@@ -4,59 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Агрегатор событий в городе</title>
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/modal.css">
     <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+    <div id="headerContainer"></div>
+    <div id="modalContainer"></div>
+
     <div class="wrapper">
-        <header class="top-bar">
-            <div class="container header-content">
-                <div class="logo-block">
-                    <span class="logo"><img src="/img/logo.jpg" alt="логотип"></span>
-                    <span class="site-title">Агрегатор событий в Гродно</span>
-                </div>
-
-                <div class="right-block">
-                    <div class="search-box">
-                        <input type="text" placeholder="Поиск..." aria-label="Поиск" />
-                        <span class="search-icon" aria-hidden="true">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="#F0EDE5" stroke-width="2" viewBox="0 0 24 24">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            </svg>
-                        </span>
-                    </div>
-
-                    <div class="auth-links">
-                        <a href="#" class="login">Вход</a>
-                        <span class="sep">/</span>
-                        <a href="#" class="register">Регистрация</a>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <div class="sub-bar">
-            <div class="container">
-                <nav class="categories" role="navigation" aria-label="Категории событий">
-                    <ul>
-                        <li><a href="#" data-category="concerts">Концерты</a></li>
-                        <li><a href="#" data-category="theatre">Театр</a></li>
-                        <li><a href="#" data-category="exhibitions">Выставки</a></li>
-                        <li><a href="#" data-category="cinema">Кино</a></li>
-                        <li><a href="#" data-category="sport">Спорт</a></li>
-                        <li><a href="#" data-category="education">Образование</a></li>
-                        <li><a href="#" data-category="parties">Вечеринки</a></li>
-                        <li><a href="#" data-category="kids">Дети</a></li>
-                        <li><a href="#" data-category="food">Еда</a></li>
-                        <li><a href="#" data-category="relax">Отдых</a></li>
-                        <li><a href="#" data-category="humor">Юмор</a></li>
-                        <li><a href="#" data-category="other">Другое</a></li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
-
         <main class="main-content container">
             <!-- Левая часть под коллаж -->
             <section class="events-section">
@@ -86,10 +45,10 @@
                             <img src="https://lh6.googleusercontent.com/proxy/TwFsrZknWjuY6C_ay8e6khQs_EGdXZLxjubcDrVxwZoHaGcl-qK9oBaUtfYX9hhA6ic9C3dTY1VH2BRFrcA1ml9RswX-eiyXnpsaj2qSxofoyQ" alt="Реклама ЛитРес">
                         </a>
                     </div>
-                
+
                     <div class="ad-block">
                         <a href="https://eda.yandex.ru" target="_blank" rel="noopener noreferrer">
-                           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3jWaGhZXDyfMDf3VM9zY7Oblw-D4PloATEg&s" alt="Реклама Яндекс Еды">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3jWaGhZXDyfMDf3VM9zY7Oblw-D4PloATEg&s" alt="Реклама Яндекс Еды">
                         </a>
                     </div>
 
@@ -101,111 +60,26 @@
                 </div>
             </aside>
         </main>
-
-        <footer>
-            <div class="footer-content">
-                <div class="social-links">
-                    <a href="https://www.youtube.com/channel/UCWInhRioERuo1Ymp1QaUY8g" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                    <a href="https://www.instagram.com/newgrodno/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://vk.com/club229245264" target="_blank" aria-label="ВКонтакте"><i class="fab fa-vk"></i></a>
-                    <a href="https://ok.ru/group/70000034047498" target="_blank" rel="noopener noreferrer" aria-label="Одноклассники"><i class="fab fa-odnoklassniki"></i></a>
-                    <a href="https://invite.viber.com/?g2=AQAB76Bjzz1pv0j4OaMuymna4qucxwXTaTWJwcidFoawin2F7z%2B%2B4RX7lgxoAgIg&lang=ru" target="_blank" rel="noopener noreferrer" aria-label="Viber"><i class="fab fa-viber"></i></a>
-                    <a href="https://t.me/newgrodno" target="_blank" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
-                </div>
-                <div class="footer-email">
-                    <a href="mailto:info@newgrodno.by">info@newgrodno.by</a>
-                </div>
-            </div>
-        </footer>        
     </div>
 
-    <div class="modal-overlay" id="authModal">
-        <div class="modal-window">
-            <button class="modal-close" id="closeModal" aria-label="Закрыть окно">&times;</button>
-        
-            <div class="modal-tab" id="loginTab">
-                <h2>Вход</h2>
-                <form class="modal-form">
-                    <label>
-                        <span>E-mail</span>
-                        <input type="email" placeholder="Введите электронную почту" required>
-                    </label>
-                
-                    <label class="password-field">
-                        <span>Пароль</span>
-                        <div class="password-wrapper">
-                            <input type="password" placeholder="Введите пароль" required>
-                            <span class="toggle-password" aria-label="Показать пароль">
-                                <i class="fa-regular fa-eye"></i>
-                            </span>
-                        </div>
-                    </label>
-                
-                    <button type="button" class="modal-btn">Войти</button>
-                
-                    <div class="modal-links">
-                        <a href="#" id="forgotLink">Забыли пароль?</a>
-                        <a href="#" id="toRegister">Зарегистрироваться</a>
-                    </div>
-                </form>
+    <footer>
+        <div class="footer-content">
+            <div class="social-links">
+                <a href="https://www.youtube.com/channel/UCWInhRioERuo1Ymp1QaUY8g" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.instagram.com/newgrodno/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://vk.com/club229245264" target="_blank" aria-label="ВКонтакте"><i class="fab fa-vk"></i></a>
+                <a href="https://ok.ru/group/70000034047498" target="_blank" rel="noopener noreferrer" aria-label="Одноклассники"><i class="fab fa-odnoklassniki"></i></a>
+                <a href="https://invite.viber.com/?g2=AQAB76Bjzz1pv0j4OaMuymna4qucxwXTaTWJwcidFoawin2F7z%2B%2B4RX7lgxoAgIg&lang=ru" target="_blank" rel="noopener noreferrer" aria-label="Viber"><i class="fab fa-viber"></i></a>
+                <a href="https://t.me/newgrodno" target="_blank" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
             </div>
-        
-            <div class="modal-tab" id="registerTab">
-                <h2>Регистрация</h2>
-                <form class="modal-form">
-                    <label>
-                        <span>Имя пользователя</span>
-                        <input type="text" placeholder="Введите имя" required>
-                    </label>
-                
-                    <label>
-                        <span>E-mail</span>
-                        <input type="email" placeholder="Введите электронную почту" required>
-                    </label>
-                
-                    <label class="password-field">
-                        <span>Пароль</span>
-                        <div class="password-wrapper">
-                            <input type="password" placeholder="Придумайте пароль" required>
-                            <span class="toggle-password" aria-label="Показать пароль">
-                                <i class="fa-regular fa-eye"></i>
-                            </span>
-                        </div>
-                    </label>
-                
-                    <label class="checkbox">
-                        <input type="checkbox" required>
-                        <span class="checkbox-text">Я принимаю условия использования и политику конфиденциальности</span>
-                    </label>
-                
-                    <button type="button" class="modal-btn">Зарегистрироваться</button>
-                
-                    <div class="modal-links">
-                        <a href="#" id="toLoginFromReg">Войти</a>
-                    </div>
-                </form>
-            </div>
-        
-            <div class="modal-tab" id="resetTab">
-                <h2>Восстановление пароля</h2>
-                <form class="modal-form">
-                    <label>
-                        <span>E-mail</span>
-                        <input type="email" placeholder="Введите электронную почту" required>
-                    </label>
-                
-                    <button type="button" class="modal-btn">Отправить письмо на почту</button>
-                
-                    <div class="modal-links">
-                        <a href="#" id="toRegisterFromReset">Зарегистрироваться</a>
-                        <a href="#" id="toLoginFromReset">Войти</a>
-                    </div>
-                </form>
+            <div class="footer-email">
+                <a href="mailto:info@newgrodno.by">info@newgrodno.by</a>
             </div>
         </div>
-    </div>
-    
-    <script src="/js/main/calendar.js"></script>
-    <script src="/js/main/modal.js"></script>
+    </footer>
+
+    <script src="/js/loadHeader.js"></script>
+    <script src="/js/calendar.js"></script>
+    <script src="/js/modal.js"></script>
 </body>
 </html>

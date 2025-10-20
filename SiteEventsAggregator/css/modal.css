@@ -1,0 +1,174 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 61, 58, 0.75);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    padding: 20px;
+}
+
+.modal-overlay.active {
+    display: flex;
+    animation: overlayFade 0.3s ease forwards;
+}
+
+.modal-window {
+    background-color: #F0EDE5;
+    color: #2A1A1F;
+    width: 100%;
+    max-width: 420px;
+    border: 2px solid #8C8577;
+    border-radius: 0;
+    padding: 30px 25px;
+    position: relative;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #004643;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+    color: #2A1A1F;
+}
+
+.modal-tab {
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.modal-tab.active {
+    display: flex;
+}
+
+.modal-tab h2 {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #2A1A1F;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.modal-form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.modal-form input[type="text"],
+.modal-form input[type="email"],
+.modal-form input[type="password"] {
+    padding: 8px 12px;
+    border: 2px solid #8C8577;
+    background-color: #fff;
+    color: #2A1A1F;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.modal-form input:focus {
+    border-color: #2A1A1F;
+}
+
+.checkbox {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.checkbox input {
+    position: absolute;
+    left: 0;
+    top: 2px;
+    accent-color: #2A1A1F;
+    width: 16px;
+    height: 16px;
+}
+
+.checkbox span {
+    display: inline-block;
+    width: calc(100% - 20px);
+}
+
+.modal-btn {
+    background-color: #004643;
+    color: #F0EDE5;
+    border: none;
+    padding: 10px 0;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.modal-btn:hover {
+    background-color: #2A1A1F;
+    transform: scale(1.02);
+}
+
+.modal-links {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.9rem;
+}
+
+.modal-links a {
+    color: #004643;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.modal-links a:hover {
+    color: #2A1A1F;
+}
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: #8C8577;
+    transition: color 0.2s ease;
+}
+
+.toggle-password:hover {
+    color: #2A1A1F;
+}
+
+.toggle-password i {
+    font-size: 1rem;
+}

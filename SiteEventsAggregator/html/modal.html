@@ -1,0 +1,85 @@
+<div class="modal-overlay" id="authModal">
+    <div class="modal-window">
+        <button class="modal-close" id="closeModal" aria-label="Закрыть окно">&times;</button>
+    
+        <div class="modal-tab" id="loginTab">
+            <h2>Вход</h2>
+            <form class="modal-form">
+                <label>
+                    <span>E-mail</span>
+                    <input type="email" placeholder="Введите электронную почту" required>
+                </label>
+            
+                <label class="password-field">
+                    <span>Пароль</span>
+                    <div class="password-wrapper">
+                        <input type="password" placeholder="Введите пароль" required>
+                        <span class="toggle-password" aria-label="Показать пароль">
+                            <i class="fa-regular fa-eye"></i>
+                        </span>
+                    </div>
+                </label>
+            
+                <button type="button" class="modal-btn">Войти</button>
+            
+                <div class="modal-links">
+                    <a href="#" id="forgotLink">Забыли пароль?</a>
+                    <a href="#" id="toRegister">Зарегистрироваться</a>
+                </div>
+            </form>
+        </div>
+    
+        <div class="modal-tab" id="registerTab">
+            <h2>Регистрация</h2>
+            <form class="modal-form">
+                <label>
+                    <span>Имя пользователя</span>
+                    <input type="text" placeholder="Введите имя" required>
+                </label>
+            
+                <label>
+                    <span>E-mail</span>
+                    <input type="email" placeholder="Введите электронную почту" required>
+                </label>
+            
+                <label class="password-field">
+                    <span>Пароль</span>
+                    <div class="password-wrapper">
+                        <input type="password" placeholder="Придумайте пароль" required>
+                        <span class="toggle-password" aria-label="Показать пароль">
+                            <i class="fa-regular fa-eye"></i>
+                        </span>
+                    </div>
+                </label>
+            
+                <label class="checkbox">
+                    <input type="checkbox" required>
+                    <span class="checkbox-text">Я принимаю условия использования и политику конфиденциальности</span>
+                </label>
+            
+                <button type="button" class="modal-btn">Зарегистрироваться</button>
+            
+                <div class="modal-links">
+                    <a href="#" id="toLoginFromReg">Войти</a>
+                </div>
+            </form>
+        </div>
+    
+        <div class="modal-tab" id="resetTab">
+            <h2>Восстановление пароля</h2>
+            <form class="modal-form">
+                <label>
+                    <span>E-mail</span>
+                    <input type="email" placeholder="Введите электронную почту" required>
+                </label>
+            
+                <button type="button" class="modal-btn">Отправить письмо на почту</button>
+            
+                <div class="modal-links">
+                    <a href="#" id="toRegisterFromReset">Зарегистрироваться</a>
+                    <a href="#" id="toLoginFromReset">Войти</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
