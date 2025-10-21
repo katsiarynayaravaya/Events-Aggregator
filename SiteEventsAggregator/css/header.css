@@ -34,6 +34,22 @@
     font-weight: 600;
 }
 
+.site-title {
+    color: #F0EDE5;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.site-title:hover,
+.site-title:focus,
+.site-title:active {
+    color: #F0EDE5;
+    text-decoration: none;
+}
+
+
 .right-block {
     display: flex;
     align-items: center;
