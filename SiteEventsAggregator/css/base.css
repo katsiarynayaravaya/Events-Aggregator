@@ -6,11 +6,20 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%; /* нужно для прижатия футера */
+}
+
 body {
     font-family: "Bitter", sans-serif;
     font-weight: 400;
     background-color: #F0EDE5;
     color: #2A1A1F;
+
+    /* Фикс для "липкого" футера */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* тело занимает всю высоту окна */
 }
 
 a {
@@ -34,4 +43,18 @@ img {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+
+    /* Чтобы футер "прилипал" к низу, контент тянется */
+    flex: 1 0 auto;
+}
+
+/* Основные контейнеры тоже могут растягиваться */
+main,
+.container {
+    flex: 1 0 auto;
+}
+
+/* Футер не сжимается и остаётся внизу */
+footer {
+    flex-shrink: 0;
 }
