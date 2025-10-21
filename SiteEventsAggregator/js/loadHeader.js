@@ -1,4 +1,3 @@
-// Загружаем HTML в контейнер
 async function loadHTML(selector, url) {
     const container = document.querySelector(selector);
     const response = await fetch(url);
@@ -6,13 +5,11 @@ async function loadHTML(selector, url) {
     container.innerHTML = html;
 }
 
-// Загружаем header и модалку
 async function loadHeader() {
     try {
         await loadHTML('#headerContainer', 'header.html');
         await loadHTML('#modalContainer', 'modal.html');
 
-        // Подсветка текущей категории
         const params = new URLSearchParams(window.location.search);
         const currentCat = params.get('cat');
         if (currentCat) {
@@ -24,12 +21,10 @@ async function loadHeader() {
             });
         }
 
-        // Инициализация модалки после загрузки элементов
         initModal();
     } catch (err) {
         console.error('Ошибка загрузки шапки или модалки:', err);
     }
 }
 
-// Автоматический вызов
 loadHeader();
