@@ -5,11 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsTitle = document.getElementById('searchResultsTitle');
     resultsTitle.textContent = `Результаты поиска "${decodeURIComponent(query)}"`;
 
-    const checkHeader = setInterval(() => {
+    const observer = new MutationObserver(() => {
         const searchInput = document.querySelector('.search-box input');
         if (searchInput) {
-            clearInterval(checkHeader);
+            observer.disconnect();
             searchInput.value = decodeURIComponent(query);
         }
-    }, 100);
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
 });

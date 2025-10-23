@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const checkHeader = setInterval(() => {
+    const observer = new MutationObserver(() => {
         const searchInput = document.querySelector('.search-box input');
         if (searchInput) {
-            clearInterval(checkHeader);
+            observer.disconnect();
 
             searchInput.addEventListener('keypress', function(event) {
                 if (event.key === 'Enter') {
@@ -13,5 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-    }, 100);
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
 });

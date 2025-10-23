@@ -2,62 +2,48 @@ document.addEventListener("DOMContentLoaded", () => {
     const eventsTitle = document.getElementById("eventsTitle");
     const eventsContent = document.getElementById("eventsContent");
 
-    // --- 1️⃣ Проверяем URL ---
     const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get("category");
     const categoryName = urlParams.get("name");
 
-    // --- 2️⃣ Ждём подгрузки header ---
-    const checkHeader = setInterval(() => {
+    const observer = new MutationObserver(() => {
         const categoryLinks = document.querySelectorAll('.categories a');
         if (categoryLinks.length > 0) {
-            clearInterval(checkHeader);
+            observer.disconnect();
 
-            // Если категория есть в URL, устанавливаем заголовок и подсветку
-            if (categoryName) {
+            if (categoryParam && categoryName) {
                 updateCategoryView(categoryName);
-                setActiveCategoryByName(categoryName);
+                setActiveCategoryByCode(categoryParam);
             }
 
-            // --- 3️⃣ Обработчик кликов ---
             document.body.addEventListener("click", (e) => {
                 const link = e.target.closest('.categories a');
                 const siteTitle = e.target.closest('.site-title');
 
                 if (siteTitle) {
                     e.preventDefault();
-                    resetToPopular();
-                    clearActiveCategory();
+                    window.location.href = "mainPage.html";
                     return;
                 }
 
                 if (link) {
                     e.preventDefault(); 
-                    // Не меняем заголовок при клике, редирект делает это
                 }
             });
         }
-    }, 100); // проверяем каждые 100 мс
+    });
 
-    // --- 4️⃣ Функции ---
-    function updateCategoryView(categoryName) {
-        eventsTitle.textContent = `${categoryName} в Гродно`;
-        eventsContent.innerHTML = `<p>Тут будет список событий категории "${categoryName}"</p>`;
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    function updateCategoryView(name) {
+        eventsTitle.textContent = `${name} в Гродно`;
+        eventsContent.innerHTML = `<p>Тут будет список событий категории "${name}"</p>`;
     }
 
-    function resetToPopular() {
-        eventsTitle.textContent = "Популярное";
-        eventsContent.innerHTML = `<p>Тут будет коллаж с мероприятиями</p>`;
-    }
-
-    function setActiveCategory(activeLink) {
-        clearActiveCategory();
-        activeLink.classList.add("active-category");
-    }
-
-    function setActiveCategoryByName(name) {
+    function setActiveCategoryByCode(category) {
         clearActiveCategory();
         document.querySelectorAll('.categories a').forEach(link => {
-            if (link.dataset.name === name) {
+            if (link.dataset.category === category) {
                 link.classList.add("active-category");
             }
         });

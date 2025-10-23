@@ -11,17 +11,18 @@ async function loadHeader() {
         await loadHTML('#modalContainer', 'modal.html');
 
         const params = new URLSearchParams(window.location.search);
-        const currentCat = params.get('cat');
-        if (currentCat) {
+        const currentCategory = params.get('category');
+        if (currentCategory) {
             document.querySelectorAll('.categories a').forEach(link => {
-                if (link.textContent === currentCat) {
-                    link.style.color = '#2A1A1F';
-                    link.style.fontWeight = 'bold';
+                if (link.dataset.category === currentCategory) {
+                    link.classList.add('active-category');
                 }
             });
         }
 
-        initModal();
+        if (typeof initModal === 'function') {
+            initModal();
+        }
     } catch (err) {
         console.error('Ошибка загрузки шапки или модалки:', err);
     }
