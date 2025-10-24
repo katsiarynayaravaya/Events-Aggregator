@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/footer.css">
     <link rel="stylesheet" href="/css/modal.css">
+    <link rel="stylesheet" href="/css/rightSidebar.css">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -28,41 +29,7 @@
                 </section>
             </div>
 
-            <aside class="calendar-section">
-                <div class="calendar">
-                    <div class="calendar-header">
-                        <button id="prevMonth" aria-label="Предыдущий месяц">&#10094;</button>
-                        <h2 id="monthYear"></h2>
-                        <button id="nextMonth" aria-label="Следующий месяц">&#10095;</button>
-                    </div>
-                    <div class="calendar-body">
-                        <div class="day-names">
-                            <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
-                        </div>
-                        <div id="calendarDays" class="calendar-days"></div>
-                    </div>
-                </div>
-
-                <div class="ads-wrapper">
-                    <div class="ad-block">
-                        <a href="https://www.litres.ru" target="_blank" rel="noopener noreferrer">
-                            <img src="https://lh6.googleusercontent.com/proxy/TwFsrZknWjuY6C_ay8e6khQs_EGdXZLxjubcDrVxwZoHaGcl-qK9oBaUtfYX9hhA6ic9C3dTY1VH2BRFrcA1ml9RswX-eiyXnpsaj2qSxofoyQ" alt="Реклама ЛитРес">
-                        </a>
-                    </div>
-
-                    <div class="ad-block">
-                        <a href="https://eda.yandex.ru" target="_blank" rel="noopener noreferrer">
-                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3jWaGhZXDyfMDf3VM9zY7Oblw-D4PloATEg&s" alt="Реклама Яндекс Еды">
-                        </a>
-                    </div>
-
-                    <div class="ad-block">
-                        <a href="https://www.ivi.ru" target="_blank" rel="noopener noreferrer">
-                            <img src="https://www.sostav.ru/images/news/2021/11/16/nxa8qtfo.png" alt="Реклама Иви">
-                        </a>
-                    </div>
-                </div>
-            </aside>
+            <div id="rightSidebarContainer"></div>
         </main>
     </div>
 
@@ -70,9 +37,10 @@
 
     <script src="/js/loadHeader.js"></script>
     <script src="/js/categoryRedirect.js"></script>
-    <script src="/js/calendar.js"></script>
     <script src="/js/modal.js"></script>
-    <script src="/js/loadFooter.js"></script>    
+    <script src="/js/loadFooter.js"></script>   
+    <script src="/js/loadRightSidebar.js"></script>
+    <script src="/js/calendar.js"></script>
     <script src="/js/categorySwitch.js"></script>
     <script src="/js/searchRedirect.js"></script>
 </body>
