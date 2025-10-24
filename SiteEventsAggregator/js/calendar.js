@@ -35,8 +35,9 @@ function initCalendar() {
             dayCell.textContent = day;
             dayCell.classList.add("day");
             dayCell.addEventListener("click", () => {
-                alert(`Открываем страницу ${day}.${month + 1}.${year}`);
+                window.location.href = `/html/eventDatePage.html?day=${day}&month=${month + 1}&year=${year}`;
             });
+
 
             const today = new Date();
             if (

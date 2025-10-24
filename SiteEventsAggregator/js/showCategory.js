@@ -3,7 +3,7 @@ const category = params.get('cat');
 
 const titleElement = document.getElementById('categoryTitle');
 if (category && titleElement) {
-    titleElement.textContent = decodeURIComponent(category);
+    titleElement.textContent = `${decodeURIComponent(category)} в Гродно`;
 }
 
 function tryHighlightCategory() {
@@ -12,7 +12,6 @@ function tryHighlightCategory() {
 
     let found = false;
     categoryLinks.forEach(link => {
-        // Получаем значение cat из href ссылки надёжно через URL
         let linkCat = null;
         try {
             const url = new URL(link.href, window.location.origin);
@@ -52,7 +51,6 @@ if (!tryHighlightCategory()) {
         }
     }, 250);
 
-    // Тайм-аут — перестанем пытаться через 5 секунд
     setTimeout(() => {
         clearInterval(pollInterval);
         observer.disconnect();

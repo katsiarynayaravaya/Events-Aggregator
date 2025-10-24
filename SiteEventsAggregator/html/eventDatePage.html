@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>События в Гродно</title>
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/modal.css">
+    <link rel="stylesheet" href="/css/rightSidebar.css">
+    <link rel="stylesheet" href="/css/eventDate.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div id="headerContainer"></div>
+    <div id="modalContainer"></div>
+
+    <div class="wrapper">
+        <main class="main-content container">
+            <div class="events-wrapper">
+                <h2 id="eventsTitle" class="events-title">События в Гродно</h2>
+                <section class="events-section">
+                    <div class="placeholder">
+                        <p>Тут будет список мероприятий выбранного дня</p>
+                    </div>
+                </section>
+            </div>
+
+            <div id="rightSidebarContainer"></div>
+        </main>
+    </div>
+
+    <div id="footerContainer"></div>
+
+    <script src="/js/loadHeader.js"></script>
+    <script src="/js/modal.js"></script>
+    <script src="/js/loadFooter.js"></script>   
+    <script src="/js/loadRightSidebar.js"></script>
+    <script src="/js/calendar.js"></script>
+    <script src="/js/setEventDateTitle.js"></script>
+    <script src="/js/searchRedirect.js"></script>
+</body>
+</html>
