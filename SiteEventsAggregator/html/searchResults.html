@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/footer.css">
     <link rel="stylesheet" href="/css/modal.css">
     <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/searchResults.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -16,7 +17,107 @@
 
     <div class="wrapper">
         <main class="main-content container">
-            <h2 id="searchResultsTitle">Результаты поиска</h2>
+
+            <!-- Левая часть — результаты поиска -->
+            <section class="search-results">
+                <h2 id="searchResultsTitle" class="events-title">Результаты поиска</h2>
+                <div id="searchResultsContent" class="results-placeholder">
+                    <p>Тут будут отображаться результаты поиска</p>
+                </div>
+            </section>
+
+            <aside class="advanced-search">
+                <h3 class="advanced-search-title">Расширенный поиск событий</h3>
+                <p class="advanced-search-subtitle">
+                    Настройте желаемые параметры для поиска подходящих событий
+                </p>
+
+                <div class="global-actions">
+                    <span id="expandAll" class="action-link">Развернуть все</span>
+                    <span id="collapseAll" class="action-link">Свернуть все</span>
+                    <span id="resetAll" class="action-link">Сбросить все</span>
+                </div>
+            
+                <div class="filters">
+                
+                    <div class="filter-block">
+                        <div class="filter-header">
+                            <span>Время и хронометраж</span>
+                            <div class="right-side">
+                                <span class="reset-link">Сбросить</span>
+                                <span class="arrow fa-solid fa-chevron-right"></span>
+                            </div>
+                        </div>
+                        <div class="filter-content">
+                            <div class="subsection">
+                                <h4>Время суток</h4>
+                                <label><input type="checkbox"> Утренние (до 12:00)</label>
+                                <label><input type="checkbox"> Дневные (12:00 - 18:00)</label>
+                                <label><input type="checkbox"> Вечерние (после 18:00)</label>
+                                <label><input type="checkbox"> Ночные (после 23:00)</label>
+                            </div>
+                            <div class="subsection">
+                                <h4>Продолжительность</h4>
+                                <label><input type="checkbox"> Короткие (до 1 часа)</label>
+                                <label><input type="checkbox"> Средние (1-3 часа)</label>
+                                <label><input type="checkbox"> Длинные (более 3 часов)</label>
+                                <label><input type="checkbox"> На целый день</label>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="filter-block">
+                        <div class="filter-header">
+                            <span>Цена</span>
+                            <div class="right-side">
+                                <span class="reset-link">Сбросить</span>
+                                <span class="arrow fa-solid fa-chevron-right"></span>
+                            </div>
+                        </div>
+                        <div class="filter-content">
+                            <label><input type="checkbox"> Бесплатные</label>
+                            <label><input type="checkbox"> Платные</label>
+                            <label><input type="checkbox"> По желанию (плати сколько хочешь)</label>
+                        </div>
+                    </div>
+                
+                    <div class="filter-block">
+                        <div class="filter-header">
+                            <span>Возрастные ограничения</span>
+                            <div class="right-side">
+                                <span class="reset-link">Сбросить</span>
+                                <span class="arrow fa-solid fa-chevron-right"></span>
+                            </div>
+                        </div>
+                        <div class="filter-content">
+                            <label><input type="checkbox"> 0+</label>
+                            <label><input type="checkbox"> 6+</label>
+                            <label><input type="checkbox"> 12+</label>
+                            <label><input type="checkbox"> 16+</label>
+                            <label><input type="checkbox"> 18+</label>
+                        </div>
+                    </div>
+                
+                    <div class="filter-block">
+                        <div class="filter-header">
+                            <span>Аудитория</span>
+                            <div class="right-side">
+                                <span class="reset-link">Сбросить</span>
+                                <span class="arrow fa-solid fa-chevron-right"></span>
+                            </div>
+                        </div>
+                        <div class="filter-content">
+                            <label><input type="checkbox"> Семьей</label>
+                            <label><input type="checkbox"> С друзьями</label>
+                            <label><input type="checkbox"> Со второй половинкой</label>
+                            <label><input type="checkbox"> Одному</label>
+                            <label><input type="checkbox"> Большой компанией</label>
+                        </div>
+                    </div>
+                </div>
+            
+                <button class="search-button">Показать результаты поиска</button>
+            </aside>
         </main>
     </div>
 
@@ -28,5 +129,6 @@
     <script src="/js/modal.js"></script>
     <script src="/js/displaySearchQuery.js"></script>
     <script src="/js/searchRedirect.js"></script>
+    <script src="/js/toggleFilters.js"></script>
 </body>
 </html>
