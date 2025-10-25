@@ -7,8 +7,8 @@ async function loadHTML(selector, url) {
 
 async function loadHeader() {
     try {
-        await loadHTML('#headerContainer', 'header.html');
-        await loadHTML('#modalContainer', 'modal.html');
+        await loadHTML('#headerContainer', '/html/header.html');
+        await loadHTML('#modalContainer', '/html/modal.html');
 
         const params = new URLSearchParams(window.location.search);
         const currentCategory = params.get('category');
