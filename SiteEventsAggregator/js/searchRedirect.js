@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (event.key === 'Enter') {
                     const query = encodeURIComponent(searchInput.value.trim());
                     if (query) {
-                        window.location.href = `searchResults.html?q=${query}`;
+                        window.location.href = `/html/searchResults.html?q=${query}`;
                     }
                 }
             });
