@@ -159,3 +159,49 @@
         object-fit: cover;
     }
 }
+
+@media (max-width: 768px) {
+    .calendar {
+        max-width: 350px;
+        margin: 0 auto;
+    }
+
+    .calendar-days .day,
+    .calendar-days .empty {
+        aspect-ratio: 1 / 1;
+        font-size: 0.9rem;
+    }
+
+    .calendar-header h2 {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar {
+        width: 100%;
+        max-width: 100%;
+        border-width: 1px;
+        margin: 0 auto;
+    }
+
+    .calendar-header h2 {
+        font-size: 0.9rem;
+    }
+
+    .calendar-days {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .calendar-days .day,
+    .calendar-days .empty {
+        padding: 4px 0;
+        aspect-ratio: 1 / 1;
+        font-size: 0.7rem;
+    }
+
+    .day-names span {
+        padding: 4px 0;
+        font-size: 0.7rem;
+    }
+}
