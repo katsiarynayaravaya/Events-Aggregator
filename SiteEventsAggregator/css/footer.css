@@ -60,3 +60,18 @@ footer {
         font-size: 1.8rem;
     }
 }
+
+
+/**/
+header, footer {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/**/
+@media (max-width: 480px) {
+    header, footer {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}

@@ -50,3 +50,13 @@
         width: 100%;
     }
 }
+/**/
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-width: 320px; 
+    background-color: #e8e5dc; 
+    overflow-x: hidden; 
+}
+
