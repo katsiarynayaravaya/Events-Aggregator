@@ -23,9 +23,33 @@ async function loadHeader() {
         if (typeof initModal === 'function') {
             initModal();
         }
+
+        setTimeout(() => {
+            if (typeof initMobileMenu === 'function') {
+                initMobileMenu();
+            } else {
+                console.error('Функция initMobileMenu не найдена');
+            }
+        }, 100);
+        
     } catch (err) {
         console.error('Ошибка загрузки шапки или модалки:', err);
     }
+}
+
+function loadMobileMenuScript() {
+    return new Promise((resolve, reject) => {
+        if (document.querySelector('script[src*="mobileMenu"]')) {
+            resolve();
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = '/js/mobileMenu.js';
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+    });
 }
 
 loadHeader();
