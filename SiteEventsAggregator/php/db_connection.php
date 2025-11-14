@@ -5,6 +5,12 @@ if ($mysqli->connect_error) {
     echo "error";
 }
 else{
-    echo " db connected";
+    echo " db connected <br>";
 }
+
+$result = $mysqli -> query('SELECT * FROM events');
+while($row=$result -> fetch_assoc()){
+    echo "Title: ".$row['title']." date: ".$row['date']." location: ".$row['location'].'<br>';
+}
+    
 ?>
