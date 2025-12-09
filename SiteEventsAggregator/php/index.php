@@ -1,4 +1,4 @@
 <?php
-//include 'db_connection.php';
+include 'php\check-env.php';
 include 'html/mainPage.html';
 ?>

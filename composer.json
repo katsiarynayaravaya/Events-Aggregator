@@ -1,0 +1,17 @@
+{
+    "name": "professional/events-aggregator",
+    "autoload": {
+        "psr-4": {
+            "Professional\\EventsAggregator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Katsiaryna",
+            "email": "yarovaya2631@gmail.com"
+        }
+    ],
+    "require": {
+        "mongodb/mongodb": "^2.1"
+    }
+}

@@ -10,7 +10,7 @@ else{
 
 $result = $mysqli -> query('SELECT * FROM events');
 while($row=$result -> fetch_assoc()){
-    echo "Title: ".$row['title']." date: ".$row['date']." location: ".$row['location'].'<br>';
+    echo "Title: ".$row['title']." location: ".$row['location'].'<br>';
 }
     
 ?>
