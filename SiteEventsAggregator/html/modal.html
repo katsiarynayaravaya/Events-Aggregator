@@ -4,7 +4,7 @@
     
         <div class="modal-tab" id="loginTab">
             <h2>Вход</h2>
-            <form class="modal-form">
+            <form class="modal-form" method="POST" action="">
                 <label>
                     <span>E-mail</span>
                     <input type="email" placeholder="Введите электронную почту" required>
@@ -31,21 +31,21 @@
     
         <div class="modal-tab" id="registerTab">
             <h2>Регистрация</h2>
-            <form class="modal-form">
+            <form class="modal-form" method="POST" action="../php/register.php">
                 <label>
                     <span>Имя пользователя</span>
-                    <input type="text" placeholder="Введите имя" required>
+                    <input type="text" name="username" placeholder="Введите имя" required>
                 </label>
             
                 <label>
                     <span>E-mail</span>
-                    <input type="email" placeholder="Введите электронную почту" required>
+                    <input type="email" name="email" placeholder="Введите электронную почту" required>
                 </label>
             
                 <label class="password-field">
                     <span>Пароль</span>
                     <div class="password-wrapper">
-                        <input type="password" placeholder="Придумайте пароль" required>
+                        <input type="password" name="password" placeholder="Придумайте пароль" required>
                         <span class="toggle-password" aria-label="Показать пароль">
                             <i class="fa-regular fa-eye"></i>
                         </span>
@@ -57,7 +57,7 @@
                     <span class="checkbox-text">Я принимаю условия использования и политику конфиденциальности</span>
                 </label>
             
-                <button type="button" class="modal-btn">Зарегистрироваться</button>
+                <button type="submit" class="modal-btn">Зарегистрироваться</button>
             
                 <div class="modal-links">
                     <a href="#" id="toLoginFromReg">Войти</a>
@@ -67,7 +67,7 @@
     
         <div class="modal-tab" id="resetTab">
             <h2>Восстановление пароля</h2>
-            <form class="modal-form">
+            <form class="modal-form" method="POST" action="">
                 <label>
                     <span>E-mail</span>
                     <input type="email" placeholder="Введите электронную почту" required>

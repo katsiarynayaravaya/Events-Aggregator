@@ -1,4 +1,4 @@
 <?php
-include 'php\check-env.php';
+//include 'php\register.php';
 include 'html/mainPage.html';
 ?>
