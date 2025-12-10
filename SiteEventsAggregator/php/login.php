@@ -1,5 +1,6 @@
 <?php
 header('Content-Type: application/json');
+session_set_cookie_params(30 * 24 * 60 * 60);
 session_start(); 
 require_once 'db_connection.php';
 

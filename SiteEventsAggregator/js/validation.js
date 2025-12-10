@@ -18,15 +18,7 @@ function closeAuthModal() {
     }
 }
 
-function switchTab(tabName) {
-    const tabs = document.querySelectorAll('.modal-tab');
-    tabs.forEach(tab => tab.classList.remove('active'));
-    
-    const targetTab = document.getElementById(tabName + 'Tab');
-    if (targetTab) {
-        targetTab.classList.add('active');
-    }
-}
+
 
 function showError(inputId, message) {
     const errorEl = document.getElementById(inputId + 'Error');
@@ -145,14 +137,6 @@ async function submitRegisterForm(event) {
             document.getElementById('registerForm').reset();
             clearAllErrors('register');
             
-            setTimeout(() => {
-                switchTab('login');
-                
-                const loginEmail = document.getElementById('loginEmail');
-                if (loginEmail) {
-                    loginEmail.value = formData.email;
-                }
-            }, 300);
             
         } else {
             if (result.field) {
@@ -250,11 +234,10 @@ function updateHeaderAfterLogin(user) {
     const authLinks = document.querySelector('.auth-links');
     if (authLinks && user) {
         authLinks.innerHTML = `
-            <span class="user-greeting">Привет, ${user.name}!</span>
-            <span class="sep">|</span>
+            
+            <a href="/html/profile.html" class="profile">${user.name}</a>
+            <span class="sep">/</span>
             <a href="#" class="logout">Выйти</a>
-            <span class="sep">|</span>
-            <a href="/html/profile.html" class="profile">Кабинет</a>
         `;
         
         const logoutBtn = document.querySelector('.logout');
