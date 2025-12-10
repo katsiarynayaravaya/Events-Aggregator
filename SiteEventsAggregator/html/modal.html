@@ -4,23 +4,25 @@
     
         <div class="modal-tab" id="loginTab">
             <h2>Вход</h2>
-            <form class="modal-form" method="POST" action="">
+            <form class="modal-form" id="loginForm" method="POST" action="">
                 <label>
                     <span>E-mail</span>
-                    <input type="email" placeholder="Введите электронную почту" required>
+                    <input type="email" id="loginEmail" placeholder="Введите электронную почту" required>
+                    <div class="error-message" id="loginEmailError"></div>
                 </label>
             
                 <label class="password-field">
                     <span>Пароль</span>
                     <div class="password-wrapper">
-                        <input type="password" placeholder="Введите пароль" required>
+                        <input type="password" id="loginPassword" placeholder="Введите пароль" required>
                         <span class="toggle-password" aria-label="Показать пароль">
                             <i class="fa-regular fa-eye"></i>
                         </span>
                     </div>
+                    <div class="error-message" id="loginPasswordError"></div>
                 </label>
             
-                <button type="button" class="modal-btn">Войти</button>
+                <button type="submit" class="modal-btn">Войти</button>
             
                 <div class="modal-links">
                     <a href="#" id="forgotLink">Забыли пароль?</a>
@@ -31,31 +33,47 @@
     
         <div class="modal-tab" id="registerTab">
             <h2>Регистрация</h2>
-            <form class="modal-form" method="POST" action="../php/register.php">
+            <form class="modal-form" id="registerForm" method="POST" action="">
                 <label>
                     <span>Имя пользователя</span>
-                    <input type="text" name="username" placeholder="Введите имя" required>
+                    <input type="text" name="username" id="registerUsername" placeholder="Введите имя" required>
+                    <div class="error-message" id="registerUsernameError"></div>
                 </label>
             
                 <label>
                     <span>E-mail</span>
-                    <input type="email" name="email" placeholder="Введите электронную почту" required>
+                    <input type="email" name="email" id="registerEmail" placeholder="Введите электронную почту" required>
+                    <div class="error-message" id="registerEmailError"></div>
                 </label>
             
                 <label class="password-field">
                     <span>Пароль</span>
                     <div class="password-wrapper">
-                        <input type="password" name="password" placeholder="Придумайте пароль" required>
+                        <input type="password" name="password" id="registerPassword" placeholder="Придумайте пароль" required>
                         <span class="toggle-password" aria-label="Показать пароль">
                             <i class="fa-regular fa-eye"></i>
                         </span>
                     </div>
+                    <div class="error-message" id="registerPasswordError"></div>
+                </label>
+
+                <label class="password-field">
+                    <span>Подтверждение пароля</span>
+                    <div class="password-wrapper">
+                        <input type="password" id="registerConfirmPassword" name="confirm_password"
+                               placeholder="Повторите пароль">
+                        <span class="toggle-password" aria-label="Показать пароль">
+                            <i class="fa-regular fa-eye"></i>
+                        </span>
+                    </div>
+                    <div class="error-message" id="registerConfirmPasswordError"></div>
                 </label>
             
                 <label class="checkbox">
-                    <input type="checkbox" required>
+                    <input type="checkbox" id="registerTerms" name="terms" required>
                     <span class="checkbox-text">Я принимаю условия использования и политику конфиденциальности</span>
                 </label>
+                <div class="error-message" id="registerTermsError"></div>
             
                 <button type="submit" class="modal-btn">Зарегистрироваться</button>
             
@@ -67,13 +85,14 @@
     
         <div class="modal-tab" id="resetTab">
             <h2>Восстановление пароля</h2>
-            <form class="modal-form" method="POST" action="">
+            <form class="modal-form" id="resetForm" method="POST" action="">
                 <label>
                     <span>E-mail</span>
-                    <input type="email" placeholder="Введите электронную почту" required>
+                    <input type="email" id="resetEmail" placeholder="Введите электронную почту" required>
+                    <div class="error-message" id="resetEmailError"></div>
                 </label>
             
-                <button type="button" class="modal-btn">Отправить письмо на почту</button>
+                <button type="submit" class="modal-btn">Отправить письмо на почту</button>
             
                 <div class="modal-links">
                     <a href="#" id="toRegisterFromReset">Зарегистрироваться</a>

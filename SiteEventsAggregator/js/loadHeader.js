@@ -20,10 +20,7 @@ async function loadHeader() {
             });
         }
 
-        if (typeof initModal === 'function') {
-            initModal();
-        }
-
+        
         setTimeout(() => {
             if (typeof initMobileMenu === 'function') {
                 initMobileMenu();

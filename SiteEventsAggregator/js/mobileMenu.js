@@ -3,34 +3,29 @@ class MobileMenu {
         this.menuToggle = null;
         this.categoriesNav = null;
         this.isOpen = false;
-        this.init();
-    }
-
-    init() {
+        
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.setupMenu());
+            document.addEventListener('DOMContentLoaded', () => this.init());
         } else {
-            this.setupMenu();
+            setTimeout(() => this.init(), 100);
         }
     }
 
-    setupMenu() {
+    init() {
         this.menuToggle = document.querySelector('.mobile-menu-toggle');
         this.categoriesNav = document.querySelector('.categories');
         
-        if (this.menuToggle && this.categoriesNav) {
-            console.log('Мобильное меню инициализировано');
-            this.setupEventListeners();
-            this.setupAccessibility();
-            
-            if (window.innerWidth <= 992) {
-                this.closeMenu();
-            }
-        } else {
-            console.error('Элементы мобильного меню не найдены');
-            setTimeout(() => {
-                this.setupMenu();
-            }, 100);
+        if (!this.menuToggle || !this.categoriesNav) {
+            console.log('Элементы мобильного меню ещё не загружены, пробуем позже');
+            setTimeout(() => this.init(), 200);
+            return;
+        }
+        
+        console.log('Мобильное меню инициализировано');
+        this.setupEventListeners();
+        
+        if (window.innerWidth <= 992) {
+            this.closeMenu();
         }
     }
 
@@ -66,9 +61,7 @@ class MobileMenu {
                 this.menuToggle.focus();
             }
         });
-    }
 
-    setupAccessibility() {
         this.menuToggle.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -103,13 +96,15 @@ class MobileMenu {
 let mobileMenu;
 
 function initMobileMenu() {
-    mobileMenu = new MobileMenu();
+    if (!mobileMenu) {
+        mobileMenu = new MobileMenu();
+    }
 }
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initMobileMenu);
 } else {
-    initMobileMenu();
+    setTimeout(initMobileMenu, 300);
 }
 
 window.initMobileMenu = initMobileMenu;
