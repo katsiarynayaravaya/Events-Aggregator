@@ -14,7 +14,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $mysqli->real_escape_string($_SESSION['user_id']);
 
-$query = "SELECT nickname, email, DATE(creation_time) as reg_date FROM users WHERE id = '$user_id'";
+$query = "SELECT nickname, email, role, DATE(creation_time) as reg_date FROM users WHERE id = '$user_id'";
 $result = $mysqli->query($query);
 
 if (!$result || $result->num_rows === 0) {
@@ -32,6 +32,7 @@ echo json_encode([
     'user' => [
         'name' => $user['nickname'],
         'email' => $user['email'],
+        'role' => $user['role'],
         'reg_date' => $user['reg_date']
     ]
 ]);

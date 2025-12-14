@@ -4,6 +4,12 @@ function initModal() {
     const loginLink = document.querySelector(".login");
     const registerLink = document.querySelector(".register");
 
+    if (document.querySelector('.logout') || document.querySelector('.profile-link')) {
+        console.log('Пользователь уже авторизован, модалка не нужна');
+        return;
+    }
+
+
     if (!loginLink || !registerLink || !authModal) {
         console.log('Элементы модалки ещё не загружены, пробуем через 100мс');
         setTimeout(initModal, 100);

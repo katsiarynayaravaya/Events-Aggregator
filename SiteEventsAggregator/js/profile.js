@@ -36,6 +36,13 @@ function loadUserData() {
                 document.getElementById('userName').textContent = data.user.name;
                 document.getElementById('userEmail').textContent = data.user.email;
                 document.getElementById('userRegDate').textContent = formatDate(data.user.reg_date);
+
+                if (data.user.role === 'admin') {
+                    
+                    document.getElementById('adminSection').style.display = 'block';
+                    //initEventForm();
+                }
+
             } else {
                 showErrorMessage(data.message || 'Ошибка загрузки данных');
             }
@@ -45,6 +52,8 @@ function loadUserData() {
             showErrorMessage('Ошибка соединения с сервером');
         });
 }
+
+
 
 
 function initProfileButtons() {

@@ -28,6 +28,8 @@ async function loadHeader() {
                 console.error('Функция initMobileMenu не найдена');
             }
         }, 100);
+
+        
         
     } catch (err) {
         console.error('Ошибка загрузки шапки или модалки:', err);

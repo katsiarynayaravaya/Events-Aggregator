@@ -38,6 +38,15 @@
                     </div>
                 </section>
 
+                <section class="profile-section" id="adminSection" style="display: none;">
+                    <h2><i class="fas fa-plus-circle"></i> Управление событиями</h2>
+                    <div class="settings-options">
+                        <button class="settings-btn" id="addEventBtn">
+                            <i class="fas fa-calendar-plus"></i> Добавить новое событие
+                        </button>
+                    </div>
+                </section>
+
                 <section class="profile-section">
                     <h2><i class="fas fa-cog"></i> Настройки</h2>
                     <div class="settings-options">
@@ -47,71 +56,6 @@
                         <button class="settings-btn logout-btn" id="logoutBtn">
                             <i class="fas fa-sign-out-alt"></i> Выйти из аккаунта
                         </button>
-                    </div>
-                </section>
-
-                <section class="profile-section admin-section" id="adminSection" style="display: none;">
-                    <h2><i class="fas fa-shield-alt"></i> Админ-панель</h2>
-                    
-                    <div class="admin-form" id="addEventForm">
-                        <h3>Добавить новое событие</h3>
-                        <form id="eventForm">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="eventTitle">Название события *</label>
-                                    <input type="text" id="eventTitle" name="title" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="eventCategory">Категория *</label>
-                                    <select id="eventCategory" name="category" required>
-                                        <option value="">Выберите категорию</option>
-                                        <option value="Концерты">Концерты</option>
-                                        <option value="Театр">Театр</option>
-                                        <option value="Выставки">Выставки</option>
-                                        <option value="Кино">Кино</option>
-                                        <option value="Спорт">Спорт</option>
-                                        <option value="Образование">Образование</option>
-                                        <option value="Вечеринки">Вечеринки</option>
-                                        <option value="Дети">Дети</option>
-                                        <option value="Еда">Еда</option>
-                                        <option value="Отдых">Отдых</option>
-                                        <option value="Юмор">Юмор</option>
-                                        <option value="Другое">Другое</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="eventDescription">Описание</label>
-                                <textarea id="eventDescription" name="description" rows="3" placeholder="Краткое описание события..."></textarea>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="eventDate">Дата *</label>
-                                    <input type="date" id="eventDate" name="date" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="eventTime">Время</label>
-                                    <input type="time" id="eventTime" name="time">
-                                </div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="eventLocation">Место проведения *</label>
-                                    <input type="text" id="eventLocation" name="location" required placeholder="Например: Драмтеатр, ул. Мостовая, 35">
-                                </div>
-                                <div class="form-group">
-                                    <label for="eventPrice">Цена (руб.)</label>
-                                    <input type="number" id="eventPrice" name="price" min="0" step="0.01" placeholder="0">
-                                </div>
-                            </div>
-                            
-                            <button type="submit" class="submit-btn">
-                                <i class="fas fa-plus"></i> Добавить событие
-                            </button>
-                        </form>
                     </div>
                 </section>
             </div>
