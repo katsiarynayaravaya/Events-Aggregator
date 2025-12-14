@@ -40,10 +40,155 @@
 
                 <section class="profile-section" id="adminSection" style="display: none;">
                     <h2><i class="fas fa-plus-circle"></i> Управление событиями</h2>
-                    <div class="settings-options">
-                        <button class="settings-btn" id="addEventBtn">
+                                
+                    <div class="toggle-form-container">
+                        <button class="settings-btn" id="toggleEventFormBtn">
                             <i class="fas fa-calendar-plus"></i> Добавить новое событие
                         </button>
+                    </div>
+                    
+                    <div class="event-form-container" id="eventFormContainer" style="display: none;">
+                        <form id="addEventForm" class="event-form">
+                            <div class="form-section">
+                                <div class="event-form-group">
+                                    <label for="eventTitle">Название события *</label>
+                                    <input type="text" id="eventTitle" class="event-form-input" 
+                                           placeholder="Введите название события" required>
+                                </div>
+                                
+                                <div class="event-form-group">
+                                    <label for="eventCategory">Категория *</label>
+                                    <select id="eventCategory" class="event-form-select" required>
+                                        <option value="">Выберите категорию</option>
+                                        <option value="Концерты">Концерты</option>
+                                        <option value="Театр">Театр</option>
+                                        <option value="Выставки">Выставки</option>
+                                        <option value="Кино">Кино</option>
+                                        <option value="Спорт">Спорт</option>
+                                        <option value="Образование">Образование</option>
+                                        <option value="Вечеринки">Вечеринки</option>
+                                        <option value="Дети">Дети</option>
+                                        <option value="Еда">Еда</option>
+                                        <option value="Отдых">Отдых</option>
+                                        <option value="Юмор">Юмор</option>
+                                        <option value="Другое">Другое</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="event-form-group">
+                                    <label for="eventLocation">Место проведения *</label>
+                                    <input type="text" id="eventLocation" class="event-form-input" 
+                                           placeholder="Например: Гродно, ул. Советская, 25" required>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="event-form-group">
+                                        <label for="eventPrice">Цена (BYN) *</label>
+                                        <input type="number" id="eventPrice" class="event-form-input" 
+                                               min="0" step="0.01" placeholder="0.00" value="0.00" required>
+                                    </div>
+                                    
+                                    <div class="event-form-group">
+                                        <label for="eventMinAge">Возрастное ограничение</label>
+                                        <select id="eventMinAge" class="event-form-select">
+                                            <option value="0+">0+ (Для всех)</option>
+                                            <option value="6+">6+</option>
+                                            <option value="12+">12+</option>
+                                            <option value="16+">16+</option>
+                                            <option value="18+">18+</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-form-group">
+                                    <label for="eventDescription">Описание события</label>
+                                    <textarea id="eventDescription" class="event-form-textarea" 
+                                              placeholder="Подробное описание события..." rows="4"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4><i class="fas fa-calendar-alt"></i> Расписание проведения</h4>
+                            
+                                <div class="schedule-container">
+                                    <div class="date-block" id="dateBlock1">
+                                        <div class="date-header">
+                                            <span class="date-label">Дата проведения *</span>
+                                            <div class="date-header-buttons">
+                                                <button type="button" class="btn-time-add" onclick="addTimeBlock(1)">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="date-time-row">
+                                            <div class="event-form-group date-input-group">
+                                                <input type="date" id="eventDate1" class="event-form-input" required>
+                                            </div>
+                                            <div class="event-form-group time-input-group">
+                                                <label for="eventStartTime1">Время начала *</label>
+                                                <input type="time" id="eventStartTime1" class="event-form-input" required>
+                                            </div>
+                                            <div class="event-form-group time-input-group">
+                                                <label for="eventEndTime1">Время окончания</label>
+                                                <input type="time" id="eventEndTime1" class="event-form-input">
+                                            </div>
+                                        </div>
+                                        <div id="timeBlocksContainer1" class="additional-time-blocks"></div>
+                                    </div>
+                                
+                                    <div id="additionalDatesContainer"></div>
+                                
+                                    <button type="button" class="btn-add-date" onclick="addDateBlock()">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4><i class="fas fa-cog"></i> Дополнительно</h4>
+                                
+                                <div class="event-form-group">
+                                    <label>Аудитория</label>
+                                    <div class="audience-checkboxes">
+                                        <label class="checkbox-option">
+                                            <input type="checkbox" name="audience" value="Семьей">
+                                            <span>Семьей</span>
+                                        </label>
+                                        <label class="checkbox-option">
+                                            <input type="checkbox" name="audience" value="С друзьями">
+                                            <span>С друзьями</span>
+                                        </label>
+                                        <label class="checkbox-option">
+                                            <input type="checkbox" name="audience" value="Со второй половинкой">
+                                            <span>Со второй половинкой</span>
+                                        </label>
+                                        <label class="checkbox-option">
+                                            <input type="checkbox" name="audience" value="Одному">
+                                            <span>Одному</span>
+                                        </label>
+                                        <label class="checkbox-option">
+                                            <input type="checkbox" name="audience" value="Большой компанией">
+                                            <span>Большой компанией</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-form-group">
+                                    <label for="eventImageUrl">
+                                        <i class="fas fa-link"></i> Ссылка на изображение
+                                    </label>
+                                    <input type="url" id="eventImageUrl" class="event-form-input" 
+                                           placeholder="https://example.com/image.jpg или /img/events/event.jpg">
+                                    <div class="form-hint">Можно оставить пустым</div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn-submit-event">
+                                    <i class="fas fa-plus"></i> Добавить событие
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </section>
 
@@ -64,6 +209,10 @@
         </main>
     </div>
 
+
+    
+
+
     <div id="footerContainer"></div>
 
     <script src="/js/loadHeader.js"></script>
@@ -75,5 +224,6 @@
     <script src="/js/mobileMenu.js"></script>
     <script src="/js/validation.js"></script>
     <script src="/js/profile.js"></script>
+    <script src="/js/eventModal.js"></script>
 </body>
 </html>

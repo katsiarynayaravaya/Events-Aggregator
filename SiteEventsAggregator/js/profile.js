@@ -40,7 +40,6 @@ function loadUserData() {
                 if (data.user.role === 'admin') {
                     
                     document.getElementById('adminSection').style.display = 'block';
-                    //initEventForm();
                 }
 
             } else {
