@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/rightSidebar.css">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/events.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -18,17 +19,12 @@
 
     <div class="wrapper">
         <main class="main-content container">
-            <!-- Левая часть под коллаж -->
+            
             <div class="events-wrapper">
                 <h2 id="eventsTitle" class="events-title">Популярное</h2>
                 <section class="events-section">
-                    <div class="placeholder">
-                        <p>Тут будет коллаж с мероприятиями <br></p>
-                        <?php 
-                        include 'php\events_list.php'; 
+                    <div class="events-wrapper-main">
                         
-                        ?> 
-
                     </div>
                 </section>
             </div>
@@ -47,5 +43,6 @@
     <script src="/js/searchRedirect.js"></script>
     <script src="/js/mobileMenu.js"></script>
     <script src="/js/validation.js"></script>
+    <script src="/js/loadEvents.js"></script>
 </body>
 </html>

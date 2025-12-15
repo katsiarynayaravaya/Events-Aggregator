@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали события</title>
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/footer.css">
+    <link rel="stylesheet" href="/css/modal.css">
+    <link rel="stylesheet" href="/css/eventDetails.css">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <div id="headerContainer"></div>
+    <div id="modalContainer"></div>
+
+    <div class="wrapper">
+        <main class="container event-details-page">
+            <div class="back-link">
+                <a href="javascript:history.back()">
+                    <i class="fas fa-arrow-left"></i> Назад
+                </a>
+            </div>
+
+            <div class="event-details-container">
+                <div class="event-image-large">
+                    <img id="eventImage" src="" alt="Изображение события">
+                    <button id="favoriteBtn" class="favorite-btn-large">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+
+                <div class="event-details-content">
+                    <h1 id="eventTitle" class="event-title-details">Загрузка...</h1>
+                    
+                    <div class="event-category-details" id="eventCategory"></div>
+                    
+                    <div class="event-description-details" id="eventDescription">
+                        <p>Загрузка описания...</p>
+                    </div>
+                    
+                    <div class="event-meta-details">
+                        <div class="meta-row">
+                            <div class="meta-item">
+                                <i class="far fa-calendar"></i>
+                                <div>
+                                    <strong>Дата:</strong>
+                                    <span id="eventDate">Загрузка...</span>
+                                </div>
+                            </div>
+                            
+                            <div class="meta-item">
+                                <i class="far fa-clock"></i>
+                                <div>
+                                    <strong>Время:</strong>
+                                    <span id="eventTime">Загрузка...</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="meta-row">
+                            <div class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div>
+                                    <strong>Место:</strong>
+                                    <span id="eventLocation">Загрузка...</span>
+                                </div>
+                            </div>
+                            
+                            <div class="meta-item">
+                                <i class="fas fa-ticket-alt"></i>
+                                <div>
+                                    <strong>Стоимость:</strong>
+                                    <span id="eventPrice">Загрузка...</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="meta-row">
+                            <div class="meta-item">
+                                <i class="fas fa-user-friends"></i>
+                                <div>
+                                    <strong>Аудитория:</strong>
+                                    <span id="eventAudience">Загрузка...</span>
+                                </div>
+                            </div>
+                            
+                            <div class="meta-item">
+                                <i class="fas fa-child"></i>
+                                <div>
+                                    <strong>Возраст:</strong>
+                                    <span id="eventAge">Загрузка...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            
+            <div class="similar-events">
+                <h2>Похожие события</h2>
+                <div id="similarEvents" class="similar-events-list">
+                    
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="footerContainer"></div>
+
+    <script src="/js/loadHeader.js"></script>
+    <script src="/js/loadFooter.js"></script>
+    <script src="/js/modal.js"></script>
+    <script src="/js/eventDetails.js"></script>
+    <script src="/js/mobileMenu.js"></script>
+    <script src="/js/validation.js"></script>
+    
+</body>
+</html>
