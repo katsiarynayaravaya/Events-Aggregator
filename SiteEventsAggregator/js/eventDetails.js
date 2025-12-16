@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     loadEventDetails(eventId);
     
-    
+    // Убираем кнопки покупки билетов и поделиться
     const buyTicketBtn = document.getElementById('buyTicketBtn');
     const shareBtn = document.getElementById('shareBtn');
     
@@ -43,16 +43,16 @@ async function loadEventDetails(eventId) {
 }
 
 function displayEventDetails(event) {
-    
+    // Устанавливаем заголовок страницы
     document.title = `${event.title} - Агрегатор событий`;
     
-    
+    // Заполняем основные данные
     document.getElementById('eventTitle').textContent = event.title;
     document.getElementById('eventCategory').textContent = event.category || 'Не указана';
     document.getElementById('eventDescription').innerHTML = 
         `<p>${event.description || 'Описание отсутствует'}</p>`;
     
-    
+    // Устанавливаем изображение
     const eventImage = document.getElementById('eventImage');
     eventImage.src = event.image || '/img/logo.jpg';
     eventImage.alt = event.title;
@@ -60,7 +60,7 @@ function displayEventDetails(event) {
         this.src = '/img/logo.jpg';
     };
     
-    
+    // Заполняем мета-данные
     document.getElementById('eventDate').textContent = 
         event.formatted_date || formatDate(event.date);
     
@@ -79,10 +79,7 @@ function displayEventDetails(event) {
     document.getElementById('eventAge').textContent = 
         event.min_age ? `${event.min_age}` : '0+';
     
-    
-    setupFavoriteButton(event.id);
-    
-    
+    // Показываем длительность если есть
     if (event.duration_minutes) {
         const durationText = formatDuration(event.duration_minutes);
         
@@ -131,45 +128,6 @@ function formatDuration(minutes) {
     }
 }
 
-function setupFavoriteButton(eventId) {
-    const favoriteBtn = document.getElementById('favoriteBtn');
-    const favorites = JSON.parse(localStorage.getItem('event_favorites')) || [];
-    const isFavorite = favorites.includes(eventId.toString());
-    
-    if (isFavorite) {
-        favoriteBtn.classList.add('active');
-        favoriteBtn.innerHTML = '<i class="fas fa-star"></i>';
-    } else {
-        favoriteBtn.classList.remove('active');
-        favoriteBtn.innerHTML = '<i class="far fa-star"></i>';
-    }
-    
-    favoriteBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        toggleFavorite(eventId, favoriteBtn);
-    });
-}
-
-function toggleFavorite(eventId, button) {
-    const icon = button.querySelector('i');
-    const favorites = JSON.parse(localStorage.getItem('event_favorites')) || [];
-    const index = favorites.indexOf(eventId.toString());
-    
-    if (index === -1) {
-        favorites.push(eventId.toString());
-        button.classList.add('active');
-        button.innerHTML = '<i class="fas fa-star"></i>';
-        showNotification('Событие добавлено в избранное');
-    } else {
-        favorites.splice(index, 1);
-        button.classList.remove('active');
-        button.innerHTML = '<i class="far fa-star"></i>';
-        showNotification('Событие удалено из избранного');
-    }
-    
-    localStorage.setItem('event_favorites', JSON.stringify(favorites));
-}
-
 async function loadSimilarEvents(eventId, category) {
     try {
         const response = await fetch(`/php/events_list.php?cat=${encodeURIComponent(category)}&limit=4&exclude=${eventId}`);
@@ -212,7 +170,7 @@ function displaySimilarEvents(events) {
         </div>
     `).join('');
     
-    
+    // Добавляем CSS стили если их нет
     if (!document.querySelector('#similar-events-style')) {
         const style = document.createElement('style');
         style.id = 'similar-events-style';
@@ -285,7 +243,7 @@ function displaySimilarEvents(events) {
         document.head.appendChild(style);
     }
     
-    
+    // Добавляем обработчики кликов
     document.querySelectorAll('.event-card-similar').forEach(card => {
         card.addEventListener('click', () => {
             const eventId = card.getAttribute('data-id');
@@ -324,59 +282,4 @@ function showError() {
             </div>
         `;
     }
-}
-
-function showNotification(message) {
-    const notification = document.createElement('div');
-    notification.className = 'favorite-notification';
-    notification.innerHTML = `
-        <i class="fas fa-star"></i>
-        <span>${message}</span>
-    `;
-    
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #004643;
-        color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        z-index: 10000;
-        animation: slideInRight 0.3s ease;
-    `;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        if (notification.parentNode) {
-            notification.parentNode.removeChild(notification);
-        }
-    }, 3000);
-}
-
-
-if (!document.querySelector('#event-details-animations')) {
-    const style = document.createElement('style');
-    style.id = 'event-details-animations';
-    style.textContent = `
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        .event-details-container {
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    `;
-    document.head.appendChild(style);
 }

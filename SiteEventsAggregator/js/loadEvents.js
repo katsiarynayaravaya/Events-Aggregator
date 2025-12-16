@@ -165,7 +165,14 @@ class EventManager {
         container.innerHTML = this.createListHTML(events);
         
         this.addEventClickHandlers();
-        this.addFavoriteHandlers();
+        
+        // Обновляем состояние звезд после рендеринга
+        if (window.favoritesManager) {
+            // Даем время на отрисовку DOM
+            setTimeout(() => {
+                window.favoritesManager.updateAllStars();
+            }, 100);
+        }
     }
     
     createListHTML(events) {
@@ -239,88 +246,13 @@ class EventManager {
     addEventClickHandlers() {
         document.querySelectorAll('.event-card-list').forEach(card => {
             card.addEventListener('click', (e) => {
-                if (e.target.closest('.favorite-btn-list')) {
-                    e.stopPropagation();
-                    return;
-                }
-                
+                // Не перехватываем клик на звезде - пусть favorites.js сам обрабатывает
                 const eventId = card.getAttribute('data-id');
-                if (eventId) {
+                if (eventId && !e.target.closest('.favorite-btn-list')) {
                     window.location.href = `/html/eventDetails.html?id=${eventId}`;
                 }
             });
         });
-    }
-    
-    addFavoriteHandlers() {
-        document.querySelectorAll('.favorite-btn-list').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const eventId = btn.getAttribute('data-id');
-                this.toggleFavorite(eventId, btn);
-            });
-        });
-    }
-    
-    toggleFavorite(eventId, button) {
-        const icon = button.querySelector('i');
-        const favorites = JSON.parse(localStorage.getItem('event_favorites')) || [];
-        const index = favorites.indexOf(eventId.toString());
-        
-        if (index === -1) {
-            favorites.push(eventId.toString());
-            icon.classList.remove('far');
-            icon.classList.add('fas');
-            this.showNotification('Событие добавлено в избранное');
-        } else {
-            favorites.splice(index, 1);
-            icon.classList.remove('fas');
-            icon.classList.add('far');
-            this.showNotification('Событие удалено из избранного');
-        }
-        
-        localStorage.setItem('event_favorites', JSON.stringify(favorites));
-    }
-    
-
-    showNotification(message) {
-        const oldNotification = document.querySelector('.favorite-notification');
-        if (oldNotification) {
-            oldNotification.remove();
-        }
-        
-        const notification = document.createElement('div');
-        notification.className = 'favorite-notification';
-        notification.innerHTML = `
-            <i class="fas fa-star"></i>
-            <span>${message}</span>
-        `;
-        
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #004643;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            z-index: 10000;
-            animation: slideInRight 0.3s ease;
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-        }, 3000);
     }
 }
 
@@ -395,4 +327,47 @@ document.addEventListener('DOMContentLoaded', () => {
             window.eventManager.showNoEvents(window.eventManager.getEventsContainer(), 'category');
         }
     }
+    
+    // Слушаем событие popstate (навигация назад/вперед в браузере)
+    window.addEventListener('popstate', () => {
+        console.log('Навигация popstate (назад/вперед), проверяем авторизацию и звезды');
+        if (window.favoritesManager) {
+            // Даем время на загрузку страницы после навигации
+            setTimeout(() => {
+                window.favoritesManager.refreshStars();
+            }, 300);
+        }
+    });
+    
+    // Обновляем звезды при клике на любую ссылку "назад"
+    document.addEventListener('click', (e) => {
+        // Проверяем, является ли элемент ссылкой "назад"
+        const backLink = e.target.closest('.back-link a') || 
+                        (e.target.closest('a') && 
+                         (e.target.closest('a').getAttribute('href') === 'javascript:history.back()' ||
+                          e.target.closest('a').getAttribute('href') === '#'));
+        
+        if (backLink && window.favoritesManager) {
+            console.log('Клик на ссылку "назад", обновляем звезды');
+            // Обновляем звезды после навигации назад
+            setTimeout(() => {
+                window.favoritesManager.refreshStars();
+            }, 500);
+        }
+    });
+    
+    // Обновляем звезды при загрузке/перезагрузке списка событий
+    window.addEventListener('eventsLoaded', () => {
+        console.log('События загружены, обновляем звезды');
+        if (window.favoritesManager) {
+            setTimeout(() => {
+                window.favoritesManager.updateAllStars();
+            }, 200);
+        }
+    });
+    
+    // Отправляем событие, когда события загружены
+    setTimeout(() => {
+        window.dispatchEvent(new Event('eventsLoaded'));
+    }, 1000);
 });
