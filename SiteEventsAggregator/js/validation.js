@@ -296,49 +296,6 @@ function initValidation() {
     }
 }
 
-
-function updateHeaderAfterLogin(user) {
-    const authLinks = document.querySelector('.auth-links');
-    if (authLinks && user) {
-        authLinks.innerHTML = `
-            <a href="/html/profile.html" class="profile">${user.name}</a>
-            <span class="sep">/</span>
-            <a href="#" class="logout">Выйти</a>
-        `;
-        
-        const logoutBtn = document.querySelector('.logout');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                logoutUser();
-            });
-        }
-        
-        // Обновляем звезды избранного при входе
-        if (window.favoritesManager) {
-            setTimeout(() => {
-                window.favoritesManager.refreshStars();
-            }, 500);
-        }
-    }
-}
-
-function logoutUser() {
-    fetch('/php/logout.php')
-        .then(response => response.json())
-        .then(result => {
-            if (result.success) {
-                // Обновляем звезды избранного при выходе
-                if (window.favoritesManager) {
-                    setTimeout(() => {
-                        window.favoritesManager.refreshStars();
-                    }, 100);
-                }
-                location.reload(); 
-            }
-        });
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     checkAuthStatus();
     
