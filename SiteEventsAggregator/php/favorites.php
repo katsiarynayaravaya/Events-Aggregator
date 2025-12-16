@@ -11,7 +11,6 @@ if (!$mysqli) {
     exit;
 }
 
-// Проверка авторизации
 if (!isset($_SESSION['user_id'])) {
     echo json_encode([
         'success' => false,
@@ -23,7 +22,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Добавить/удалить из избранного
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $input = json_decode(file_get_contents('php://input'), true);
     
@@ -38,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id_escaped = $mysqli->real_escape_string($user_id);
     $event_id = (int)$input['event_id'];
     
-    // Проверить существует ли событие
     $check_event = $mysqli->query("SELECT id FROM events WHERE id = $event_id");
     if (!$check_event || $check_event->num_rows === 0) {
         echo json_encode([
@@ -48,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    // Проверить, есть ли уже в избранном
     $check_favorite = $mysqli->query("
         SELECT * FROM favorites 
         WHERE user_id = '$user_id_escaped' AND event_id = $event_id
@@ -57,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $is_favorite = $check_favorite && $check_favorite->num_rows > 0;
     
     if ($is_favorite) {
-        // Удалить из избранного
         $sql = "DELETE FROM favorites 
                 WHERE user_id = '$user_id_escaped' AND event_id = $event_id";
         
@@ -74,7 +69,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
         }
     } else {
-        // Добавить в избранное
         $sql = "INSERT INTO favorites (user_id, event_id, added_at) 
                 VALUES ('$user_id_escaped', $event_id, NOW())";
         
@@ -85,7 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'message' => 'Событие добавлено в избранное'
             ]);
         } else {
-            // Если ошибка дублирования (уже есть в избранном)
             if ($mysqli->errno == 1062) {
                 echo json_encode([
                     'success' => true,
@@ -104,7 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// Проверить, находится ли событие в избранном
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['check'])) {
     if (!isset($_GET['event_id']) || !is_numeric($_GET['event_id'])) {
         echo json_encode([

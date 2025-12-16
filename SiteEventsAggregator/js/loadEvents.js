@@ -166,9 +166,7 @@ class EventManager {
         
         this.addEventClickHandlers();
         
-        // Обновляем состояние звезд после рендеринга
         if (window.favoritesManager) {
-            // Даем время на отрисовку DOM
             setTimeout(() => {
                 window.favoritesManager.updateAllStars();
             }, 100);
@@ -246,7 +244,6 @@ class EventManager {
     addEventClickHandlers() {
         document.querySelectorAll('.event-card-list').forEach(card => {
             card.addEventListener('click', (e) => {
-                // Не перехватываем клик на звезде - пусть favorites.js сам обрабатывает
                 const eventId = card.getAttribute('data-id');
                 if (eventId && !e.target.closest('.favorite-btn-list')) {
                     window.location.href = `/html/eventDetails.html?id=${eventId}`;
@@ -328,20 +325,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Слушаем событие popstate (навигация назад/вперед в браузере)
     window.addEventListener('popstate', () => {
         console.log('Навигация popstate (назад/вперед), проверяем авторизацию и звезды');
         if (window.favoritesManager) {
-            // Даем время на загрузку страницы после навигации
             setTimeout(() => {
                 window.favoritesManager.refreshStars();
             }, 300);
         }
     });
     
-    // Обновляем звезды при клике на любую ссылку "назад"
     document.addEventListener('click', (e) => {
-        // Проверяем, является ли элемент ссылкой "назад"
         const backLink = e.target.closest('.back-link a') || 
                         (e.target.closest('a') && 
                          (e.target.closest('a').getAttribute('href') === 'javascript:history.back()' ||
@@ -349,14 +342,12 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (backLink && window.favoritesManager) {
             console.log('Клик на ссылку "назад", обновляем звезды');
-            // Обновляем звезды после навигации назад
             setTimeout(() => {
                 window.favoritesManager.refreshStars();
             }, 500);
         }
     });
     
-    // Обновляем звезды при загрузке/перезагрузке списка событий
     window.addEventListener('eventsLoaded', () => {
         console.log('События загружены, обновляем звезды');
         if (window.favoritesManager) {
@@ -366,7 +357,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Отправляем событие, когда события загружены
     setTimeout(() => {
         window.dispatchEvent(new Event('eventsLoaded'));
     }, 1000);

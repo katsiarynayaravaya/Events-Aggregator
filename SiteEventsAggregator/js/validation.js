@@ -314,7 +314,6 @@ function updateHeaderAfterLogin(user) {
             });
         }
         
-        // Обновляем звезды избранного при входе
         if (window.favoritesManager) {
             setTimeout(() => {
                 window.favoritesManager.refreshStars();
@@ -328,7 +327,6 @@ function logoutUser() {
         .then(response => response.json())
         .then(result => {
             if (result.success) {
-                // Обновляем звезды избранного при выходе
                 if (window.favoritesManager) {
                     setTimeout(() => {
                         window.favoritesManager.refreshStars();

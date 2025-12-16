@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     loadEventDetails(eventId);
     
-    // Убираем кнопки покупки билетов и поделиться
+
     const buyTicketBtn = document.getElementById('buyTicketBtn');
     const shareBtn = document.getElementById('shareBtn');
     
@@ -43,16 +43,16 @@ async function loadEventDetails(eventId) {
 }
 
 function displayEventDetails(event) {
-    // Устанавливаем заголовок страницы
+
     document.title = `${event.title} - Агрегатор событий`;
     
-    // Заполняем основные данные
+
     document.getElementById('eventTitle').textContent = event.title;
     document.getElementById('eventCategory').textContent = event.category || 'Не указана';
     document.getElementById('eventDescription').innerHTML = 
         `<p>${event.description || 'Описание отсутствует'}</p>`;
     
-    // Устанавливаем изображение
+
     const eventImage = document.getElementById('eventImage');
     eventImage.src = event.image || '/img/logo.jpg';
     eventImage.alt = event.title;
@@ -60,7 +60,7 @@ function displayEventDetails(event) {
         this.src = '/img/logo.jpg';
     };
     
-    // Заполняем мета-данные
+
     document.getElementById('eventDate').textContent = 
         event.formatted_date || formatDate(event.date);
     
@@ -79,7 +79,7 @@ function displayEventDetails(event) {
     document.getElementById('eventAge').textContent = 
         event.min_age ? `${event.min_age}` : '0+';
     
-    // Показываем длительность если есть
+
     if (event.duration_minutes) {
         const durationText = formatDuration(event.duration_minutes);
         
@@ -170,7 +170,7 @@ function displaySimilarEvents(events) {
         </div>
     `).join('');
     
-    // Добавляем CSS стили если их нет
+
     if (!document.querySelector('#similar-events-style')) {
         const style = document.createElement('style');
         style.id = 'similar-events-style';
@@ -243,7 +243,7 @@ function displaySimilarEvents(events) {
         document.head.appendChild(style);
     }
     
-    // Добавляем обработчики кликов
+
     document.querySelectorAll('.event-card-similar').forEach(card => {
         card.addEventListener('click', () => {
             const eventId = card.getAttribute('data-id');
