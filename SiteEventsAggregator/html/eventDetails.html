@@ -10,6 +10,78 @@
     <link rel="stylesheet" href="/css/eventDetails.css">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .event-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .meta-item-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #004643;
+        }
+        
+        .meta-item-card i {
+            color: #004643;
+            font-size: 1.2em;
+            min-width: 24px;
+            margin-top: 3px;
+        }
+        
+        .meta-content {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        .meta-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .meta-value {
+            font-weight: 500;
+            color: #2A1A1F;
+            font-size: 1em;
+            line-height: 1.4;
+        }
+        
+        /* Стили для отображения времени */
+        .time-slots {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 3px;
+        }
+        
+        .time-slot {
+            padding: 4px 8px;
+            background: #f0f9ff;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #004643;
+            border: 1px solid #cce7ff;
+        }
+        
+        .date-time-group {
+            margin-bottom: 8px;
+        }
+        
+        .date-label {
+            font-weight: 500;
+            color: #2A1A1F;
+            font-size: 0.95em;
+            margin-bottom: 3px;
+        }
+    </style>
 </head>
 <body>
     <div id="headerContainer"></div>
@@ -27,7 +99,7 @@
                 <div class="event-image-large">
                     <img id="eventImage" src="" alt="Изображение события">
                     <button id="favoriteBtn" class="favorite-btn-large">
-                        <i class="far fa-star"></i> <!-- Изменили с fa-heart на fa-star -->
+                        <i class="far fa-star"></i>
                     </button>
                 </div>
 
@@ -40,62 +112,65 @@
                         <p>Загрузка описания...</p>
                     </div>
                     
-                    <div class="event-meta-details">
-                        <div class="meta-row">
-                            <div class="meta-item">
-                                <i class="far fa-calendar"></i>
-                                <div>
-                                    <strong>Дата:</strong>
-                                    <span id="eventDate">Загрузка...</span>
-                                </div>
-                            </div>
-                            
-                            <div class="meta-item">
-                                <i class="far fa-clock"></i>
-                                <div>
-                                    <strong>Время:</strong>
-                                    <span id="eventTime">Загрузка...</span>
-                                </div>
+                    <!-- Обновленная структура метаданных -->
+                    <div class="event-meta-grid">
+                        <div class="meta-item-card">
+                            <i class="far fa-calendar"></i>
+                            <div class="meta-content">
+                                <span class="meta-label">Дата</span>
+                                <span class="meta-value" id="eventDate">Загрузка...</span>
                             </div>
                         </div>
                         
-                        <div class="meta-row">
-                            <div class="meta-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <div>
-                                    <strong>Место:</strong>
-                                    <span id="eventLocation">Загрузка...</span>
-                                </div>
-                            </div>
-                            
-                            <div class="meta-item">
-                                <i class="fas fa-ticket-alt"></i>
-                                <div>
-                                    <strong>Стоимость:</strong>
-                                    <span id="eventPrice">Загрузка...</span>
-                                </div>
+                        <div class="meta-item-card">
+                            <i class="far fa-clock"></i>
+                            <div class="meta-content">
+                                <span class="meta-label">Время</span>
+                                <div class="meta-value" id="eventTime">Загрузка...</div>
                             </div>
                         </div>
                         
-                        <div class="meta-row">
-                            <div class="meta-item">
-                                <i class="fas fa-user-friends"></i>
-                                <div>
-                                    <strong>Аудитория:</strong>
-                                    <span id="eventAudience">Загрузка...</span>
-                                </div>
+                        <div class="meta-item-card">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div class="meta-content">
+                                <span class="meta-label">Место</span>
+                                <span class="meta-value" id="eventLocation">Загрузка...</span>
                             </div>
-                            
-                            <div class="meta-item">
-                                <i class="fas fa-child"></i>
-                                <div>
-                                    <strong>Возраст:</strong>
-                                    <span id="eventAge">Загрузка...</span>
-                                </div>
+                        </div>
+                        
+                        <div class="meta-item-card">
+                            <i class="fas fa-ticket-alt"></i>
+                            <div class="meta-content">
+                                <span class="meta-label">Стоимость</span>
+                                <span class="meta-value" id="eventPrice">Загрузка...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="meta-item-card">
+                            <i class="fas fa-user-friends"></i>
+                            <div class="meta-content">
+                                <span class="meta-label">Аудитория</span>
+                                <span class="meta-value" id="eventAudience">Загрузка...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="meta-item-card">
+                            <i class="fas fa-child"></i>
+                            <div class="meta-content">
+                                <span class="meta-label">Возраст</span>
+                                <span class="meta-value" id="eventAge">Загрузка...</span>
                             </div>
                         </div>
                     </div>
                     
+                    <div class="event-actions" style="margin-top: 30px;">
+                        <button id="buyTicketBtn" class="btn-buy-ticket">
+                            <i class="fas fa-ticket-alt"></i> Купить билет
+                        </button>
+                        <button id="shareBtn" class="btn-share">
+                            <i class="fas fa-share-alt"></i> Поделиться
+                        </button>
+                    </div>
                 </div>
             </div>
 

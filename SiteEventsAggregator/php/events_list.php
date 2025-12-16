@@ -19,6 +19,7 @@ if (!$mysqli) {
 if (isset($_GET['id'])) {
     $event_id = (int)$_GET['id'];
     
+    // Для детальной страницы - получаем все данные
     $sql = "
         SELECT 
             e.id, 
@@ -38,7 +39,6 @@ if (isset($_GET['id'])) {
         LEFT JOIN event_times et ON ed.id = et.event_date_id
         WHERE e.id = ?
         ORDER BY ed.date ASC, et.start_time ASC
-        LIMIT 1
     ";
     
     $stmt = $mysqli->prepare($sql);
@@ -55,36 +55,122 @@ if (isset($_GET['id'])) {
     $stmt->execute();
     $result = $stmt->get_result();
     
-    if ($row = $result->fetch_assoc()) {
+    $event_data = null;
+    $dates = [];
+    $times = [];
+    
+    while ($row = $result->fetch_assoc()) {
+        if (!$event_data) {
+            // Сохраняем основную информацию о событии
+            $event_data = $row;
+        }
+        
+        // Собираем все даты
         if (!empty($row['date'])) {
-            $date = new DateTime($row['date']);
-            $row['formatted_date'] = $date->format('d.m.Y');
+            $dates[] = $row['date'];
         }
         
+        // Собираем все времена с правильным форматированием
         if (!empty($row['start_time'])) {
-            $time = new DateTime($row['start_time']);
-            $row['formatted_time'] = $time->format('H:i');
+            $start_time = $row['start_time'];
+            $end_time = $row['end_time'];
+            
+            // Форматируем время всегда в HH:MM
+            if (strlen($start_time) <= 2) {
+                // Если только часы (например "17")
+                $start_time = str_pad($start_time, 2, '0', STR_PAD_LEFT) . ':00';
+            } elseif (strlen($start_time) > 5) {
+                // Если в формате HH:MM:SS
+                $start_time = substr($start_time, 0, 5);
+            }
+            
+            if (!empty($end_time)) {
+                if (strlen($end_time) <= 2) {
+                    $end_time = str_pad($end_time, 2, '0', STR_PAD_LEFT) . ':00';
+                } elseif (strlen($end_time) > 5) {
+                    $end_time = substr($end_time, 0, 5);
+                }
+            }
+            
+            $times[] = [
+                'date' => $row['date'],
+                'start_time' => $start_time,
+                'end_time' => $end_time
+            ];
+        }
+    }
+    
+    if ($event_data) {
+        // Уникальные даты
+        $unique_dates = array_unique($dates);
+        sort($unique_dates);
+        
+        // Добавляем информацию о всех датах
+        if (!empty($unique_dates)) {
+            $event_data['all_dates'] = implode('|', $unique_dates);
+            $event_data['date'] = $unique_dates[0]; // Первая дата для основного отображения
         }
         
-        if (!empty($row['end_time'])) {
-            $end_time = new DateTime($row['end_time']);
-            $row['end_time_formatted'] = $end_time->format('H:i');
+        // Форматируем все временные слоты для отображения
+        $time_slots = [];
+        $formatted_time_slots = []; // Для человекочитаемого формата
+        
+        foreach ($times as $time) {
+            if ($time['date'] && $time['start_time']) {
+                // Формат для хранения
+                $slot = $time['date'] . ':' . $time['start_time'];
+                if (!empty($time['end_time']) && $time['end_time'] !== $time['start_time']) {
+                    $slot .= '-' . $time['end_time'];
+                }
+                $time_slots[] = $slot;
+                
+                // Человекочитаемый формат для отображения в карточке
+                $formatted_start = $time['start_time'];
+                $formatted_end = !empty($time['end_time']) ? $time['end_time'] : $time['start_time'];
+                $time_display = $formatted_start === $formatted_end ? 
+                    $formatted_start : 
+                    $formatted_start . ' - ' . $formatted_end;
+                
+                $formatted_time_slots[] = [
+                    'date' => $time['date'],
+                    'display' => $time_display
+                ];
+            }
         }
         
-        if (empty($row['image'])) {
-            $row['image'] = '/img/logo.jpg';
+        $event_data['all_time_slots'] = implode('|', array_unique($time_slots));
+        $event_data['formatted_time_slots'] = $formatted_time_slots; // Для отображения в карточке
+        
+        // Форматируем первую дату
+        if (!empty($unique_dates[0])) {
+            $date = new DateTime($unique_dates[0]);
+            $event_data['formatted_date'] = $date->format('d.m.Y');
         }
         
-        if (!empty($row['start_time']) && !empty($row['end_time'])) {
-            $start = new DateTime($row['start_time']);
-            $end = new DateTime($row['end_time']);
-            $interval = $start->diff($end);
-            $row['duration_minutes'] = $interval->h * 60 + $interval->i;
+        // Форматируем первое время
+        if (!empty($times[0])) {
+            $event_data['start_time'] = $times[0]['start_time'];
+            $event_data['first_start_time'] = $times[0]['start_time'];
+            
+            if (!empty($times[0]['end_time'])) {
+                $event_data['end_time'] = $times[0]['end_time'];
+                $event_data['first_end_time'] = $times[0]['end_time'];
+            }
+        }
+        
+        // Дефолтное изображение
+        if (empty($event_data['image'])) {
+            $event_data['image'] = '/img/logo.jpg';
+        }
+        
+        // Возраст - оставляем как есть из базы
+        if (isset($event_data['min_age'])) {
+            $event_data['min_age'] = trim($event_data['min_age']);
         }
         
         echo json_encode([
             'success' => true,
-            'event' => $row
+            'event' => $event_data
         ], JSON_UNESCAPED_UNICODE);
     } else {
         echo json_encode([
@@ -114,8 +200,9 @@ try {
         throw new Exception('Таблица events не найдена в базе данных');
     }
     
+    // Для списков событий - используем DISTINCT чтобы избежать дублирования
     $sql = "
-        SELECT 
+        SELECT DISTINCT
             e.id, 
             e.title, 
             e.location, 
@@ -126,14 +213,14 @@ try {
             e.description, 
             e.audience,
             ed.date,
-            et.start_time, 
-            et.end_time
+            et.start_time
         FROM events e
         LEFT JOIN event_dates ed ON e.id = ed.event_id
         LEFT JOIN event_times et ON ed.id = et.event_date_id
         WHERE 1=1
     ";
     
+    // Фильтры по дате
     if (isset($_GET['date_from']) && !empty($_GET['date_from'])) {
         $date_from = $mysqli->real_escape_string($_GET['date_from']);
         $sql .= " AND ed.date >= '$date_from'";
@@ -149,16 +236,19 @@ try {
         $sql .= " AND ed.date = '$date'";
     }
     
+    // Фильтр по категории
     if (isset($_GET['cat']) && !empty($_GET['cat'])) {
         $category = urldecode($mysqli->real_escape_string($_GET['cat']));
         $sql .= " AND e.category = '$category'";
     }
     
+    // Поиск
     if (isset($_GET['q']) && !empty($_GET['q'])) {
         $search = urldecode($mysqli->real_escape_string($_GET['q']));
         $sql .= " AND (e.title LIKE '%$search%' OR e.description LIKE '%$search%' OR e.location LIKE '%$search%')";
     }
     
+    // Фильтр по продолжительности
     if (isset($_GET['duration_type'])) {
         $duration_types = explode(',', $_GET['duration_type']);
         $duration_conditions = [];
@@ -185,6 +275,7 @@ try {
         }
     }
     
+    // Фильтр по времени суток
     if (isset($_GET['time_of_day'])) {
         $time_of_day = explode(',', $_GET['time_of_day']);
         $time_conditions = [];
@@ -211,6 +302,7 @@ try {
         }
     }
     
+    // Фильтр по цене
     if (isset($_GET['price_type'])) {
         switch ($_GET['price_type']) {
             case 'free':
@@ -225,6 +317,7 @@ try {
         }
     }
     
+    // Фильтр по возрасту
     if (isset($_GET['min_age'])) {
         $min_age = preg_replace('/[^0-9]/', '', $_GET['min_age']);
         if (is_numeric($min_age)) {
@@ -232,19 +325,22 @@ try {
         }
     }
     
+    // Фильтр по аудитории
     if (isset($_GET['audience'])) {
         $audience = urldecode($mysqli->real_escape_string($_GET['audience']));
         $sql .= " AND e.audience LIKE '%$audience%'";
     }
     
+    // Исключить событие (для похожих событий)
     if (isset($_GET['exclude'])) {
         $exclude_id = (int)$_GET['exclude'];
         $sql .= " AND e.id != $exclude_id";
     }
     
+    // Сортируем
     $sql .= " ORDER BY ed.date ASC, et.start_time ASC";
     
-   
+    // Лимит
     if (isset($_GET['limit'])) {
         $limit = (int)$_GET['limit'];
         $sql .= " LIMIT $limit";
@@ -259,63 +355,59 @@ try {
     }
     
     $events = [];
+    $processed_events = [];
+    
     while ($row = $result->fetch_assoc()) {
+        // Пропускаем дубликаты событий
+        if (in_array($row['id'], $processed_events)) {
+            continue;
+        }
         
+        // Форматируем дату
         if (!empty($row['date'])) {
             $date = new DateTime($row['date']);
             $row['formatted_date'] = $date->format('d.m.Y');
         }
         
+        // Форматируем время всегда в HH:MM
         if (!empty($row['start_time'])) {
-            $time = new DateTime($row['start_time']);
-            $row['start_time_formatted'] = $time->format('H:i');
+            $start_time = $row['start_time'];
+            
+            if (strlen($start_time) <= 2) {
+                // Если только часы
+                $row['start_time_formatted'] = str_pad($start_time, 2, '0', STR_PAD_LEFT) . ':00';
+                $row['start_time'] = $row['start_time_formatted'];
+            } elseif (strlen($start_time) > 5) {
+                // Если в формате HH:MM:SS
+                $row['start_time_formatted'] = substr($start_time, 0, 5);
+                $row['start_time'] = $row['start_time_formatted'];
+            } else {
+                $row['start_time_formatted'] = $start_time;
+            }
         }
         
-        if (!empty($row['end_time'])) {
-            $end_time = new DateTime($row['end_time']);
-            $row['end_time_formatted'] = $end_time->format('H:i');
-        }
-        
-        
-        if (!empty($row['start_time']) && !empty($row['end_time'])) {
-            $start = new DateTime($row['start_time']);
-            $end = new DateTime($row['end_time']);
-            $interval = $start->diff($end);
-            $row['duration_minutes'] = $interval->h * 60 + $interval->i;
-            $row['duration_hours'] = $interval->h;
-        }
-        
-        
+        // Дефолтное изображение
         if (empty($row['image'])) {
             $row['image'] = '/img/logo.jpg';
         }
         
         $events[] = $row;
+        $processed_events[] = $row['id'];
     }
-    
     
     echo json_encode([
         'success' => true,
         'total' => count($events),
-        'events' => $events,
-        'query_info' => [
-            'sql' => $sql,
-            'filters' => $_GET
-        ]
+        'events' => $events
     ], JSON_UNESCAPED_UNICODE);
     
 } catch (Exception $e) {
-    
     echo json_encode([
         'success' => false,
         'message' => 'Произошла ошибка',
-        'error' => $e->getMessage(),
-        'debug' => [
-            'filters' => $_GET
-        ]
+        'error' => $e->getMessage()
     ], JSON_UNESCAPED_UNICODE);
 }
-
 
 if (isset($mysqli) && $mysqli instanceof mysqli) {
     $mysqli->close();

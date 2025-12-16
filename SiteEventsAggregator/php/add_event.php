@@ -42,7 +42,7 @@ if (json_last_error() !== JSON_ERROR_NONE || !$data) {
 
 $errors = [];
 
-$required = ['title', 'category', 'location', 'price', 'dates'];
+$required = ['title', 'category', 'location', 'dates'];
 foreach ($required as $field) {
     if (empty($data[$field])) {
         $errors[] = "Поле '{$field}' обязательно для заполнения";

@@ -3,6 +3,29 @@ class EventManager {
         this.useMockData = false;
     }
     
+    formatTime(timeStr) {
+        if (!timeStr || timeStr.trim() === '') return '';
+        
+        // Если время уже в формате HH:MM
+        if (timeStr.match(/^\d{1,2}:\d{2}$/)) {
+            return timeStr;
+        }
+        
+        // Если время в формате HH:MM:SS
+        if (timeStr.match(/^\d{1,2}:\d{2}:\d{2}$/)) {
+            return timeStr.substring(0, 5);
+        }
+        
+        // Если только часы (например "17")
+        if (timeStr.match(/^\d{1,2}$/)) {
+            const hours = parseInt(timeStr);
+            return `${hours.toString().padStart(2, '0')}:00`;
+        }
+        
+        return timeStr;
+    }
+
+
     loadMainPageEvents() {
         const today = new Date().toISOString().split('T')[0];
         const nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
@@ -64,7 +87,9 @@ class EventManager {
             
             if (data.success && data.events && Array.isArray(data.events)) {
                 if (data.events.length > 0) {
-                    this.renderEvents(data.events, container);
+                    // Фильтруем дубликаты на клиенте (дополнительная защита)
+                    const uniqueEvents = this.filterDuplicateEvents(data.events);
+                    this.renderEvents(uniqueEvents, container);
                 } else {
                     this.showNoEvents(container, context);
                 }
@@ -76,6 +101,22 @@ class EventManager {
             console.error('Ошибка загрузки событий:', error);
             this.showError(container, error.message);
         }
+    }
+    
+    // Фильтрация дубликатов на клиенте
+    filterDuplicateEvents(events) {
+        const seen = new Set();
+        const uniqueEvents = [];
+        
+        for (const event of events) {
+            if (!seen.has(event.id)) {
+                seen.add(event.id);
+                uniqueEvents.push(event);
+            }
+        }
+        
+        console.log(`Фильтрация дубликатов: ${events.length} → ${uniqueEvents.length} событий`);
+        return uniqueEvents;
     }
     
     getEventsContainer() {
@@ -174,9 +215,20 @@ class EventManager {
     }
     
     createListHTML(events) {
-        return `
-            <div class="events-list">
-                ${events.map(event => `
+    return `
+        <div class="events-list">
+            ${events.map(event => {
+                // Форматируем время для отображения в карточке
+                let timeDisplay = '';
+                if (event.start_time_formatted) {
+                    timeDisplay = event.start_time_formatted;
+                } else if (event.start_time) {
+                    timeDisplay = this.formatTime(event.start_time);
+                } else {
+                    timeDisplay = 'Время не указано';
+                }
+                
+                return `
                     <div class="event-card-list" data-id="${event.id}">
                         <div class="event-image-list">
                             <img src="${event.image || '/img/logo.jpg'}" 
@@ -205,7 +257,7 @@ class EventManager {
                                 </div>
                                 <div class="event-meta-item">
                                     <i class="far fa-clock"></i>
-                                    ${event.start_time ? event.start_time.substring(0, 5) : 'Время не указано'}
+                                    ${timeDisplay}
                                 </div>
                                 <div class="event-meta-item">
                                     <i class="fas fa-map-marker-alt"></i>
@@ -214,10 +266,11 @@ class EventManager {
                             </div>
                         </div>
                     </div>
-                `).join('')}
-            </div>
-        `;
-    }
+                `;
+            }).join('')}
+        </div>
+    `;
+}
     
     formatDate(dateString) {
         if (!dateString) return 'Дата не указана';
@@ -234,6 +287,28 @@ class EventManager {
             return dateString;
         }
     }
+
+    formatTime(timeStr) {
+    if (!timeStr || timeStr.trim() === '') return '';
+    
+    // Если время уже в формате HH:MM
+    if (timeStr.match(/^\d{1,2}:\d{2}$/)) {
+        return timeStr;
+    }
+    
+    // Если время в формате HH:MM:SS
+    if (timeStr.match(/^\d{1,2}:\d{2}:\d{2}$/)) {
+        return timeStr.substring(0, 5);
+    }
+    
+    // Если только часы (например "17")
+    if (timeStr.match(/^\d{1,2}$/)) {
+        const hours = parseInt(timeStr);
+        return `${hours.toString().padStart(2, '0')}:00`;
+    }
+    
+    return timeStr;
+}
     
     truncateText(text, maxLength) {
         if (!text) return '';

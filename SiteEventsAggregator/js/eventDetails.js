@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     loadEventDetails(eventId);
     
-
+    // Убираем кнопки покупки билетов и поделиться
     const buyTicketBtn = document.getElementById('buyTicketBtn');
     const shareBtn = document.getElementById('shareBtn');
     
@@ -43,16 +43,22 @@ async function loadEventDetails(eventId) {
 }
 
 function displayEventDetails(event) {
-
+    // Сохраняем событие для возможного использования
+    window.currentEvent = event;
+    
+    // Устанавливаем заголовок страницы
     document.title = `${event.title} - Агрегатор событий`;
     
-
+    // Заполняем основные данные
     document.getElementById('eventTitle').textContent = event.title;
     document.getElementById('eventCategory').textContent = event.category || 'Не указана';
-    document.getElementById('eventDescription').innerHTML = 
-        `<p>${event.description || 'Описание отсутствует'}</p>`;
     
-
+    // Описание с сохранением переносов строк
+    const description = event.description || 'Описание отсутствует';
+    const formattedDescription = description.replace(/\n/g, '<br>');
+    document.getElementById('eventDescription').innerHTML = `<p>${formattedDescription}</p>`;
+    
+    // Устанавливаем изображение
     const eventImage = document.getElementById('eventImage');
     eventImage.src = event.image || '/img/logo.jpg';
     eventImage.alt = event.title;
@@ -60,47 +66,126 @@ function displayEventDetails(event) {
         this.src = '/img/logo.jpg';
     };
     
-
-    document.getElementById('eventDate').textContent = 
-        event.formatted_date || formatDate(event.date);
-    
-    document.getElementById('eventTime').textContent = 
-        `${event.formatted_time || event.start_time_formatted || 'Не указано'}${event.end_time_formatted ? ` - ${event.end_time_formatted}` : ''}`;
-    
-    document.getElementById('eventLocation').textContent = 
-        event.location || 'Не указано';
-    
-    document.getElementById('eventPrice').textContent = 
-        getPriceDisplay(event);
-    
-    document.getElementById('eventAudience').textContent = 
-        event.audience || 'Для всех';
-    
-    document.getElementById('eventAge').textContent = 
-        event.min_age ? `${event.min_age}` : '0+';
-    
-
-    if (event.duration_minutes) {
-        const durationText = formatDuration(event.duration_minutes);
-        
-        const timeElement = document.getElementById('eventTime');
-        if (timeElement) {
-            timeElement.innerHTML += ` <span style="color: #666; font-size: 0.9em;">(${durationText})</span>`;
+    // ПОЛНАЯ ИНФОРМАЦИЯ О ДАТЕ
+    // Если есть несколько дат, показываем диапазон
+    if (event.all_dates) {
+        const dates = event.all_dates.split('|').filter(d => d.trim() !== '');
+        if (dates.length > 1) {
+            // Показываем диапазон дат
+            const firstDate = formatDateFull(dates[0]);
+            const lastDate = formatDateFull(dates[dates.length - 1]);
+            document.getElementById('eventDate').textContent = `${firstDate} - ${lastDate}`;
+        } else if (dates.length === 1) {
+            // Показываем одну дату
+            document.getElementById('eventDate').textContent = formatDateFull(dates[0]);
         }
+    } else if (event.date) {
+        // Или используем основную дату
+        document.getElementById('eventDate').textContent = formatDateFull(event.date);
+    } else {
+        document.getElementById('eventDate').textContent = 'Дата не указана';
     }
+    
+    // ВРЕМЕННЫЕ СЕАНСЫ - показываем все сразу
+    let timeDisplay = '';
+    
+    if (event.formatted_time_slots && Array.isArray(event.formatted_time_slots) && event.formatted_time_slots.length > 0) {
+        // Группируем сеансы по датам для красивого отображения
+        const timeSlotsByDate = {};
+        event.formatted_time_slots.forEach(slot => {
+            if (!timeSlotsByDate[slot.date]) {
+                timeSlotsByDate[slot.date] = [];
+            }
+            timeSlotsByDate[slot.date].push(slot.display);
+        });
+        
+        // Создаем красивый блок с сеансами
+        const dates = Object.keys(timeSlotsByDate).sort();
+        
+        if (dates.length === 1) {
+            // Если только одна дата, показываем все сеансы в одной строке
+            const slots = timeSlotsByDate[dates[0]];
+            timeDisplay = slots.join(', ');
+        } else {
+            // Если несколько дат, создаем компактный блок только с временами
+            timeDisplay = createTimeSlotsDisplay(timeSlotsByDate);
+        }
+    } else if (event.start_time) {
+        // Или используем время из основных полей
+        timeDisplay = formatTime(event.start_time);
+        if (event.end_time && event.end_time !== event.start_time) {
+            timeDisplay += ` - ${formatTime(event.end_time)}`;
+        }
+    } else {
+        timeDisplay = 'Время не указано';
+    }
+    
+    document.getElementById('eventTime').innerHTML = timeDisplay;
+    
+    // Остальные поля
+    document.getElementById('eventLocation').textContent = event.location || 'Место не указано';
+    document.getElementById('eventPrice').textContent = getPriceDisplay(event);
+    document.getElementById('eventAudience').textContent = event.audience || 'Для всех';
+    
+    // ВОЗРАСТ - выводим как есть из БД
+    document.getElementById('eventAge').textContent = event.min_age || '0+';
 }
 
-function getPriceDisplay(event) {
-    if (event.price === 0 || event.price === '0') {
-        return 'Бесплатно';
-    } else if (event.price > 0) {
-        return `${event.price} руб.`;
+function createTimeSlotsDisplay(timeSlotsByDate) {
+    const dates = Object.keys(timeSlotsByDate).sort();
+    
+    // Собираем ВСЕ временные сеансы без дат
+    const allTimeSlots = [];
+    dates.forEach(date => {
+        allTimeSlots.push(...timeSlotsByDate[date]);
+    });
+    
+    // Убираем дубликаты времени
+    const uniqueTimeSlots = [...new Set(allTimeSlots)];
+    
+    // Если много уникальных временных слотов, показываем компактно
+    if (uniqueTimeSlots.length > 3) {
+        return `
+            <div style="color: #004643;">
+                <div style="margin-bottom: 5px;">
+                    <i class="far fa-clock"></i> 
+                    <strong>Доступно ${uniqueTimeSlots.length} сеансов</strong>
+                </div>
+                <div style="font-size: 0.95em; color: #666;">
+                    ${uniqueTimeSlots.slice(0, 3).join(', ')} и другие...
+                </div>
+            </div>
+        `;
     }
-    return 'Цена не указана';
+    
+    // Если немного временных слотов, показываем все
+    return uniqueTimeSlots.join(', ');
 }
 
-function formatDate(dateString) {
-    if (!dateString) return 'Дата не указана';
+function formatTime(timeStr) {
+    if (!timeStr || timeStr.trim() === '') return '';
+    
+    // Если время уже в формате HH:MM
+    if (timeStr.match(/^\d{1,2}:\d{2}$/)) {
+        return timeStr;
+    }
+    
+    // Если время в формате HH:MM:SS
+    if (timeStr.match(/^\d{1,2}:\d{2}:\d{2}$/)) {
+        return timeStr.substring(0, 5);
+    }
+    
+    // Если только часы (например "17")
+    if (timeStr.match(/^\d{1,2}$/)) {
+        const hours = parseInt(timeStr);
+        return `${hours.toString().padStart(2, '0')}:00`;
+    }
+    
+    return timeStr;
+}
+
+function formatDateFull(dateString) {
+    if (!dateString) return '';
     
     try {
         const date = new Date(dateString);
@@ -115,17 +200,29 @@ function formatDate(dateString) {
     }
 }
 
-function formatDuration(minutes) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
+function formatDateShort(dateString) {
+    if (!dateString) return '';
     
-    if (hours === 0) {
-        return `${mins} мин`;
-    } else if (mins === 0) {
-        return `${hours} ч`;
-    } else {
-        return `${hours} ч ${mins} мин`;
+    try {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('ru-RU', {
+            day: 'numeric',
+            month: 'short'
+        });
+    } catch (e) {
+        return dateString;
     }
+}
+
+function getPriceDisplay(event) {
+    if (event.price === 0 || event.price === '0') {
+        return 'Бесплатно';
+    } else if (event.price > 0) {
+        return `${event.price} руб.`;
+    } else if (event.price === -1) {
+        return 'Добровольный взнос';
+    }
+    return 'Цена не указана';
 }
 
 async function loadSimilarEvents(eventId, category) {
@@ -170,7 +267,7 @@ function displaySimilarEvents(events) {
         </div>
     `).join('');
     
-
+    // Добавляем CSS стили если их нет
     if (!document.querySelector('#similar-events-style')) {
         const style = document.createElement('style');
         style.id = 'similar-events-style';
@@ -243,7 +340,7 @@ function displaySimilarEvents(events) {
         document.head.appendChild(style);
     }
     
-
+    // Добавляем обработчики кликов
     document.querySelectorAll('.event-card-similar').forEach(card => {
         card.addEventListener('click', () => {
             const eventId = card.getAttribute('data-id');
@@ -252,20 +349,6 @@ function displaySimilarEvents(events) {
             }
         });
     });
-}
-
-function formatDateShort(dateString) {
-    if (!dateString) return '';
-    
-    try {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('ru-RU', {
-            day: 'numeric',
-            month: 'short'
-        });
-    } catch (e) {
-        return '';
-    }
 }
 
 function showError() {

@@ -1,5 +1,6 @@
 let dateBlockCount = 1;
 let timeBlockCounts = {};
+let isSubmitting = false;
 
 document.addEventListener('DOMContentLoaded', function() {
     initEventForm();
@@ -21,57 +22,136 @@ function initEventForm() {
     
     const eventForm = document.getElementById('addEventForm');
     if (eventForm) {
-        eventForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const errorContainer = document.getElementById('formErrors');
-            if (errorContainer) {
-                errorContainer.remove();
-            }
-            
-            const formData = collectFormData();
-            
-            if (!validateEventForm(formData)) {
-                return;
-            }
-            
-            const submitBtn = eventForm.querySelector('.btn-submit-event');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
-            submitBtn.disabled = true;
-            
-            try {
-                const response = await fetch('/php/add_event.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showSuccessMessage(result.message);
-                    hideEventForm();
-                    resetEventForm();
-                } else {
-                    showServerErrors(result.errors || [result.message]);
-                }
-                
-            } catch (error) {
-                console.error('Ошибка сети:', error);
-                showServerErrors(['Ошибка сети. Проверьте подключение к интернету']);
-            } finally {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }
+        // Удаляем атрибут onsubmit из HTML если он есть
+        eventForm.removeAttribute('onsubmit');
+        
+        // Удаляем все существующие обработчики
+        eventForm.removeEventListener('submit', handleFormSubmit);
+        
+        // Добавляем обработчик с правильными параметрами
+        eventForm.addEventListener('submit', function(e) {
+            handleFormSubmit(e);
         });
+        
+        // Отключаем стандартное подтверждение браузера
+        eventForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            return false;
+        }, false);
+        
+        // Также добавляем обработчик для кнопки
+        const submitBtn = eventForm.querySelector('.btn-submit-event');
+        if (submitBtn) {
+            // Убираем type="submit" если есть
+            submitBtn.type = 'button';
+            
+            submitBtn.addEventListener('click', function(e) {
+                handleFormSubmit(e);
+            });
+        }
         
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('eventDate1').min = today;
     }
     timeBlockCounts[1] = 1;
+}
+
+async function handleFormSubmit(e) {
+    // Предотвращаем любое стандартное поведение
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+    }
+    
+    // Проверяем, не идет ли уже отправка
+    if (isSubmitting) {
+        console.warn('Форма уже отправляется, игнорируем повторный запрос');
+        return false;
+    }
+    
+    const errorContainer = document.getElementById('formErrors');
+    if (errorContainer) {
+        errorContainer.remove();
+    }
+    
+    const formData = collectFormData();
+    
+    if (!validateEventForm(formData)) {
+        return false;
+    }
+    
+    // Показываем наше собственное подтверждение
+    if (!confirm('Вы уверены, что хотите добавить событие?')) {
+        return false;
+    }
+    
+    const eventForm = document.getElementById('addEventForm');
+    const submitBtn = eventForm.querySelector('.btn-submit-event');
+    const originalText = submitBtn.innerHTML;
+    
+    // Блокируем форму
+    isSubmitting = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+    submitBtn.disabled = true;
+    submitBtn.classList.add('submitting');
+    
+    // Блокируем все поля формы
+    const allInputs = eventForm.querySelectorAll('input, select, textarea, button');
+    allInputs.forEach(input => {
+        if (input !== submitBtn && input.type !== 'hidden') {
+            input.disabled = true;
+            input.classList.add('disabled');
+        }
+    });
+    
+    try {
+        const response = await fetch('/php/add_event.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showSuccessMessage(result.message);
+            hideEventForm();
+            resetEventForm();
+            
+            // Обновляем список событий
+            if (window.eventManager) {
+                setTimeout(() => {
+                    window.eventManager.loadMainPageEvents();
+                }, 100);
+            }
+        } else {
+            showServerErrors(result.errors || [result.message]);
+        }
+        
+    } catch (error) {
+        console.error('Ошибка сети:', error);
+        showServerErrors(['Ошибка сети. Проверьте подключение к интернету']);
+    } finally {
+        // Разблокируем форму
+        isSubmitting = false;
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('submitting');
+        
+        // Разблокируем все поля формы
+        const allInputs = eventForm.querySelectorAll('input, select, textarea, button');
+        allInputs.forEach(input => {
+            if (input !== submitBtn && input.type !== 'hidden') {
+                input.disabled = false;
+                input.classList.remove('disabled');
+            }
+        });
+    }
+    
+    return false;
 }
 
 function collectFormData() {
@@ -91,6 +171,9 @@ function collectFormData() {
         formData.audience.push(cb.value);
     });
     
+    // Используем Set для избежания дублирования дат на клиенте
+    const uniqueDates = new Set();
+    
     for (let dateId = 1; dateId <= dateBlockCount; dateId++) {
         const dateBlock = document.getElementById('dateBlock' + dateId);
         if (!dateBlock) continue;
@@ -99,8 +182,16 @@ function collectFormData() {
         const startTimeInput = document.getElementById('eventStartTime' + dateId);
         
         if (dateInput && dateInput.value && startTimeInput && startTimeInput.value) {
+            const date = dateInput.value;
+            
+            // Проверяем дублирование дат на клиенте
+            if (uniqueDates.has(date)) {
+                continue; // Пропускаем дублирующую дату
+            }
+            uniqueDates.add(date);
+            
             const dateItem = {
-                date: dateInput.value,
+                date: date,
                 time_blocks: []
             };
             
@@ -167,7 +258,15 @@ function validateEventForm(formData) {
         errors.push('Добавьте хотя бы одну дату проведения');
     }
     
+    // Проверка на дублирование дат
+    const dateSet = new Set();
     formData.dates.forEach((dateItem, dateIndex) => {
+        if (dateSet.has(dateItem.date)) {
+            errors.push(`Дата ${dateItem.date} указана несколько раз`);
+            highlightField(`eventDate${dateIndex + 1}`);
+        }
+        dateSet.add(dateItem.date);
+        
         const dateObj = new Date(dateItem.date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -185,7 +284,16 @@ function validateEventForm(formData) {
             highlightField(`eventDate${dateIndex + 1}`);
         }
         
+        // Проверка на дублирование времени в пределах одной даты
+        const timeSet = new Set();
         dateItem.time_blocks.forEach((timeBlock, timeIndex) => {
+            const timeKey = `${timeBlock.start_time}-${timeBlock.end_time || 'null'}`;
+            
+            if (timeSet.has(timeKey)) {
+                errors.push(`Время ${timeBlock.start_time} указано несколько раз для даты ${dateItem.date}`);
+            }
+            timeSet.add(timeKey);
+            
             if (timeBlock.end_time && timeBlock.start_time >= timeBlock.end_time) {
                 errors.push(`Время начала должно быть раньше времени окончания (дата ${dateIndex + 1}, блок ${timeIndex + 1})`);
             }
@@ -252,7 +360,34 @@ function isValidUrl(string) {
 }
 
 function showSuccessMessage(message) {
-    alert(message);
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #004643;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: slideInRight 0.3s ease;
+    `;
+    
+    modal.innerHTML = `
+        <i class="fas fa-check-circle" style="font-size: 1.2rem;"></i>
+        <span>${message}</span>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    setTimeout(() => {
+        modal.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => modal.remove(), 300);
+    }, 3000);
 }
 
 function showServerErrors(errors) {
@@ -296,7 +431,7 @@ window.addTimeBlock = function(dateBlockId) {
         </div>
         <div class="time-block-fields">
             <div class="event-form-group">
-                <label>Время начала</label>
+                <label>Время начала *</label>
                 <input type="time" class="event-form-input add-start-time" required>
             </div>
             <div class="event-form-group">
@@ -404,3 +539,35 @@ function resetEventForm() {
         }
     }
 }
+
+// Добавляем CSS для блокировки формы
+const style = document.createElement('style');
+style.textContent = `
+    .btn-submit-event.submitting {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
+    
+    .error-field {
+        border-color: #dc3545 !important;
+        background-color: #fff5f5 !important;
+        animation: shake 0.5s ease-in-out;
+    }
+    
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes slideOutRight {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+    }
+`;
+document.head.appendChild(style);
